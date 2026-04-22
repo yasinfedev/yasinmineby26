@@ -1,0 +1,2228 @@
+
+
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YasinMineBY26 | Acil Tıp Asistan Bilgi Yarışması Sistemi</title>
+
+  <!-- Bootstrap 5 (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --muted:#6c757d;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 20px;
+    }
+    body{
+      background: radial-gradient(1200px 600px at 10% 10%, #ffffff 0%, var(--bg) 55%, #eef2f6 100%);
+      min-height:100vh;
+    }
+    .screen{ display:none; width:100%; }
+    .screen.active{ display:block; }
+
+    .topbar{
+      position:sticky; top:0; z-index:10;
+      background:rgba(244,246,248,.75);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid rgba(0,0,0,.06);
+    }
+    .brand-badge{
+      display:inline-flex; align-items:center; gap:.6rem;
+      background: var(--card);
+      padding:.6rem 1rem;
+      border-radius:999px;
+      box-shadow: var(--shadow);
+      border:1px solid rgba(0,0,0,.06);
+      font-weight:700;
+    }
+    .stage-pill{
+      font-weight:800;
+      border-radius:999px;
+      padding:.45rem .85rem;
+      border:1px solid rgba(0,0,0,.08);
+      background:#fff;
+    }
+
+    .cardx{
+      background:var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border:1px solid rgba(0,0,0,.06);
+    }
+    .hero{ padding: clamp(1rem, 3vw, 2.2rem); }
+    .title{
+      font-weight:900;
+      letter-spacing:-.02em;
+      line-height:1.05;
+      font-size: clamp(2rem, 4.5vw, 3.6rem);
+    }
+    .subtitle{ color:var(--muted); font-size: clamp(1rem, 1.6vw, 1.15rem); }
+    .btn-xl{
+      padding: .95rem 1.25rem;
+      border-radius: 14px;
+      font-weight: 800;
+      letter-spacing:.02em;
+    }
+
+    .question-wrap{ padding: clamp(1rem, 2.5vw, 2rem); }
+    .q-text{
+      font-size: clamp(1.0rem, 2.2vw, 2rem);
+      font-weight: 550;
+      letter-spacing: -.01em;
+    }
+    .option-btn{
+  text-align:left;
+  width:100%;
+  border-radius: 16px;
+  padding: 1.05rem 1.1rem;
+  font-weight: 800;
+
+  background: #f8f9fb;                 /* ✅ hafif gri arkaplan */
+  border: 2px solid rgba(0,0,0,.10);    /* ✅ daha belirgin sınır */
+  color: #212529;                       /* ✅ yazı koyu */
+  
+  transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease, border-color .12s ease;
+}
+
+.option-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(0,0,0,.08);
+  background: #ffffff;
+  border-color: rgba(0,0,0,.18);
+}
+
+.option-btn:disabled{
+  opacity: 1;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+.opt-letter{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  margin-right: 12px;
+  font-weight: 900;
+  background: rgba(0,0,0,.08);
+  border: 1px solid rgba(0,0,0,.10);
+}
+    
+
+    .timer-badge{
+      font-variant-numeric: tabular-nums;
+      font-weight: 950;
+      font-size: clamp(2.2rem, 5vw, 4.2rem);
+      letter-spacing: -.04em;
+      line-height: 1;
+    }
+
+    /* ✅ Timer default: siyah */
+.timer-normal{
+  color:#212529;
+}
+
+/* ✅ Son 10 saniye: koyu kırmızı */
+.timer-danger{
+  color:#8b0000; /* koyu kırmızı */
+}
+    .meta-chip{
+      border-radius: 999px;
+      padding: .45rem .75rem;
+      font-weight: 850;
+      border:1px solid rgba(0,0,0,.08);
+      background:#fff;
+      display:inline-flex; align-items:center; gap:.5rem;
+      white-space:nowrap;
+    }
+    .chip-dot{
+      width:10px; height:10px; border-radius:999px; display:inline-block;
+      box-shadow: 0 0 0 3px rgba(0,0,0,.04);
+    }
+
+    .table thead th{ font-weight:900; }
+   .rank-1 > *{ background-color: rgba(25,135,84,.10) !important; }
+.rank-2 > *{ background-color: rgba(13,110,253,.08) !important; }
+.rank-3 > *{ background-color: rgba(255,193,7,.12) !important; }
+.rank-4 > *{ background-color: rgba(108,117,125,.10) !important; }
+
+    .footer-note{ color:var(--muted); font-size:.95rem; }
+
+   /* ✅ Üst tur / elenen renkleri (live scoreboard) */
+.live-qualify > *{
+  background-color: rgba(25,135,84,.12) !important;   /* açık yeşil */
+}
+
+.live-eliminate > *{
+  background-color: rgba(220,53,69,.10) !important;   /* açık kırmızı */
+}
+
+    @media (min-width: 992px){
+      .two-col{
+        display:grid;
+        grid-template-columns: 1.2fr .8fr;
+        gap: 1.25rem;
+        align-items:stretch;
+      }
+    }
+
+/* ✅ Kongre sahne modu: kategoriye göre arka plan tonu */
+.arena{
+  transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.bg-yesil{
+  background: linear-gradient(180deg, rgba(25,135,84,.10), rgba(255,255,255,1));
+  border-color: rgba(25,135,84,.20) !important;
+  box-shadow: 0 12px 30px rgba(25,135,84,.10);
+}
+.bg-sari{
+  background: linear-gradient(180deg, rgba(255,193,7,.14), rgba(255,255,255,1));
+  border-color: rgba(255,193,7,.25) !important;
+  box-shadow: 0 12px 30px rgba(255,193,7,.12);
+}
+.bg-kirmizi{
+  background: linear-gradient(180deg, rgba(220,53,69,.10), rgba(255,255,255,1));
+  border-color: rgba(220,53,69,.22) !important;
+  box-shadow: 0 12px 30px rgba(220,53,69,.10);
+}
+.bg-bonus{
+  background: linear-gradient(180deg, rgba(13,110,253,.10), rgba(255,255,255,1));
+  border-color: rgba(13,110,253,.22) !important;
+  box-shadow: 0 12px 30px rgba(13,110,253,.10);
+}
+
+/* ✅ Tie-break sahne modu */
+.bg-tiebreak{
+  background: linear-gradient(180deg, rgba(111,66,193,.12), rgba(255,255,255,1)); /* açık mor */
+  border-color: rgba(111,66,193,.25) !important;
+  box-shadow: 0 12px 30px rgba(111,66,193,.12);
+}
+
+    /* Açılış ekranı kongre banner */
+.congress-banner{
+  margin-top: 1.5rem;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0,0,0,.10);
+  border: 1px solid rgba(0,0,0,.06);
+}
+
+.congress-banner img{
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+    /* Kurallar kartı alt banner */
+.rules-banner{
+  margin-top: 1.25rem;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+
+.rules-banner img{
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+    #btnStart:disabled{
+  opacity: 1;          /* soluklaşmasın */
+  cursor: default;
+  pointer-events: none;
+  background: #212529;
+  border-color: #212529;
+}
+
+    /* Welcome banner alanı: ekrana sığdır */
+.welcome-banner{
+  margin-top: 1rem;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 12px 30px rgba(0,0,0,.12);
+
+  /* 🔥 Daha büyük banner */
+  height: min(55vh, 500px);
+}
+
+.welcome-banner img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* taşanı kırpar, banner gibi durur */
+  display: block;
+}
+    
+  </style>
+</head>
+
+<body>
+  <!-- TOPBAR -->
+  <div class="topbar py-3">
+    <div class="container-fluid px-3 px-md-4 d-flex align-items-center justify-content-between">
+      <div class="brand-badge">
+        <span class="badge text-bg-dark rounded-pill">ATUDER</span>
+        <span>Acil Tıp Asistan Bilgi Yarışması 2026 | YasinMineBY26 - v1.10.51 - BC 1.18 | © yamizey yazılım</span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span id="stagePill" class="stage-pill d-none">AŞAMA</span>
+        <span id="subStagePill" class="stage-pill d-none">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid px-3 px-md-4 py-4">
+    <!-- SCREEN: WELCOME -->
+    <section id="screenWelcome" class="screen active">
+      <div class="cardx hero">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-7">
+            <div class="title">Şimdi Bilgi Yarışması Zamanı!</div>
+            <p class="subtitle mt-3 mb-0">
+              2026 Acil Tıp Asistan Bilgi Yarışması
+            </p>
+          </div>
+          <div class="col-lg-5">
+            <div class="cardx p-4">
+              <div class="d-grid gap-2">
+                <button id="btnStart" class="btn btn-dark btn-xl" disabled>HOŞ GELDİNİZ!</button>
+                <button id="btnDemoFill" class="btn btn-outline-secondary btn-xl">
+                  Takım İsimlerini Girin
+                </button>
+              </div>
+              <div class="footer-note mt-3">
+                <center><b>yamizey yazılım</b> tarafından <b>22.Ulusal Acil Tıp Kongresi</b> <br>için özel olarak geliştirilmiştir.</center>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ✅ KONGRE BANNER -->
+  <div class="welcome-banner">
+  <img src="https://acil42.com/wp-content/uploads/2026/02/Ekran-Resmi-2026-02-13-18.11.12.png"
+       alt="April Congress 2026">
+</div>
+    </section>
+
+    <!-- SCREEN: TEAMS -->
+    <section id="screenTeams" class="screen">
+      <div class="two-col">
+        <div class="cardx p-4">
+          <h2 class="fw-bold mb-2">Acil Tıp Asistan Bilgi Yarışması'na Hoş Geldiniz!</h2>
+          <hr>
+          <h3 class="fw-bold mb-2">Yarışmamız birazdan başlayacaktır. Lütfen yarışma sırasında sessiz olunuz, cep telefonlarınızı da sessize alınız.</h3>
+          <p class="text-secondary mb-4">Herkese iyi eğlenceler diliyoruz :)</p>
+
+          <div class="row g-3 align-items-end">
+            <div class="col-md-9">
+              <label class="form-label fw-bold">Yarışmadaki Takımlar Listesi</label>
+              <textarea id="teamTextarea" class="form-control" rows="10" placeholder="Örn:
+Konya City
+Nabız yok biz varız
+9'uncu Senfoni
+..."></textarea>
+            </div>
+            <div class="col-md-3">
+              <div class="d-grid gap-2">
+                <button id="btnParseTeams" class="btn btn-primary btn-xl">Takımları Kaydet</button>
+                <button id="btnClearTeams" class="btn btn-outline-secondary btn-xl">Temizle</button>
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-4"/>
+
+          <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between">
+            <div class="text-secondary">
+              <span class="fw-bold">HER AŞAMA:</span> 1 Yeşil + 2 Sarı + 1 Kırmızı + 1 Bonus (Toplam 5 soru)<br>
+              <span class="fw-bold">TOPLAM 3 AŞAMA:</span> 3 Yeşil + 6 Sarı + 3 Kırmızı + 3 Bonus (Toplam 15 soru)
+            </div>
+            <button id="btnBeginStage1" class="btn btn-dark btn-xl" disabled>YARIŞMAYA BAŞLA</button>
+          </div>
+        </div>
+
+        <div class="cardx p-4">
+          <h4 class="fw-bold">Kurallar / Puanlama</h4>
+          <ul class="mb-0">
+            <li>Yeşil kategori: <span class="fw-bold">10</span> puan</li>
+            <li>Sarı kategori: <span class="fw-bold">15</span> puan</li>
+            <li>Kırmızı kategori: <span class="fw-bold">25</span> puan</li>
+            <li>Bonus kategori: <span class="fw-bold">4</span> puan</li>
+            <li>Her soru için süre: <span class="fw-bold">30 sn</span></li>
+            <li>Eleme eşitliklerinde eşitlikteki takımlara, eşitlik sıralaması bozulana dek 5 puanlık <span class="fw-bold">bonus tie-break</span> sorusu sorulur. Bu sorulardan elde edilen puanlar genel sıralamada hesaplanmaz.</li>
+          </ul>
+          <hr>
+          <!-- Kongre Banner -->
+<div class="rules-banner">
+  <img src="https://acil42.com/wp-content/uploads/2026/04/Dosya.png"
+       alt="ATUDER_EPAT_Logo">
+ 
+</div>
+           <hr>
+  <ul class="mb-0">
+            <li>Tasarım ve kodlama: <br><span class="fw-bold">Uzm.Dr.Mine Kayacı Yıldız ve Uzm.Dr.Yasin Yıldız</span>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN: QUESTION -->
+    <section id="screenQuestion" class="screen">
+      <div class="two-col">
+
+        <div class="cardx question-wrap arena" id="arenaCard">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+              <span id="chipCategory" class="badge fs-6 px-3 py-2">
+  KATEGORİ
+</span>
+              <span id="chipPoints" class="meta-chip">
+                <span class="badge text-bg-dark rounded-pill">PUAN</span>
+                <span id="txtPoints">0</span>
+              </span>
+              <span id="chipQCounter" class="meta-chip">
+                <span class="badge text-bg-secondary rounded-pill">SORU</span>
+                <span id="txtQCounter">1/5</span>
+              </span>
+              <span id="chipMode" class="meta-chip d-none">
+                <span class="badge text-bg-warning rounded-pill">TIE-BREAK</span>
+                <span id="txtMode">BONUS</span>
+              </span>
+            </div>
+
+            <div class="text-end">
+              <div id="timerBig" class="timer-badge">30</div>
+              <div class="text-secondary fw-bold">saniye</div>
+            </div>
+          </div>
+
+          <div class="progress mt-3" style="height:10px;">
+            <div id="timerBar" class="progress-bar" role="progressbar" style="width:100%"></div>
+          </div>
+
+          <hr class="my-4"/>
+
+          <div id="questionText" class="q-text mb-3">Soru metni...</div>
+
+          <div class="d-grid gap-2">
+            <button class="option-btn" id="optA"></button>
+            <button class="option-btn" id="optB"></button>
+            <button class="option-btn" id="optC"></button>
+            <button class="option-btn" id="optD"></button>
+          </div>
+
+          <hr class="my-4"/>
+
+          <div class="d-flex flex-wrap gap-2">
+  <button id="btnShowAnswer" class="btn btn-success btn-xl d-none">CEVABI GÖSTER</button>
+  <button id="btnEnterPoints" class="btn btn-primary btn-xl d-none" data-bs-toggle="modal" data-bs-target="#pointsModal">
+    PUAN GİR
+  </button>
+  <button id="btnUndoLastScore" class="btn btn-outline-danger btn-xl d-none">GERİ AL</button>
+  <button id="btnNextQuestion" class="btn btn-dark btn-xl d-none">SONRAKİ SORU</button>
+  <button id="btnStartTimer" class="btn btn-warning btn-xl ms-auto">SÜREYİ BAŞLAT</button>
+</div>
+
+          <div class="footer-note mt-3">
+            © Web uygulamasının tüm hakları saklıdır.
+          </div>
+        </div>
+
+        <div class="cardx p-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <h4 class="fw-bold mb-0">Anlık Puan Tablosu</h4>
+            <span class="badge text-bg-dark rounded-pill" id="activeTeamsBadge">0 takım</span>
+          </div>
+          <div class="table-responsive mt-3">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th style="width:60px;">#</th>
+                  <th>Takım</th>
+                  <th class="text-end">Puan</th>
+                </tr>
+              </thead>
+              <tbody id="liveScoreBody"></tbody>
+            </table>
+          </div>
+          <div class="footer-note">Bu tablo, her “PUAN GİR” işleminden sonra güncellenir.</div>
+          <hr>
+          <div class="score-logo-wrap">
+  <center><img src="https://acil42.com/wp-content/uploads/2026/04/Dosya.png" alt="ATUDER Logo" class="score-logo"></center>
+</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SCREEN: SCOREBOARD -->
+    <section id="screenScoreboard" class="screen">
+      <div class="cardx p-4">
+        <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+          <div>
+            <h2 id="scoreboardTitle" class="fw-bold mb-1">Puan Tablosu</h2>
+            <div id="scoreboardSubtitle" class="text-secondary">—</div>
+          </div>
+          <div class="d-flex flex-wrap gap-2 justify-content-between w-100">
+  <button id="btnBackToTeams" class="btn btn-danger btn-xl">
+    Yarışmayı Sıfırla
+  </button>
+
+  <button id="btnProceedNextStage" class="btn btn-dark btn-xl d-none">
+    DEVAM
+  </button>
+</div>
+        </div>
+
+        <hr class="my-3"/>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th style="width:70px;">Sıra</th>
+                <th>Takım</th>
+                <th class="text-end">Toplam Puan</th>
+                <th class="text-end d-none" id="thTieExtra">Tie-break Ekstra</th>
+                <th class="text-end">Durum</th>
+              </tr>
+            </thead>
+            <tbody id="finalScoreBody"></tbody>
+          </table>
+        </div>
+
+        <div id="tieInfo" class="alert alert-warning d-none mt-3 mb-0">
+          Sıralama eşitliği var. Bonus tie-break sorularına geçilecek.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL: POINTS ENTRY -->
+  <div class="modal fade" id="pointsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="border-radius:18px;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Puan Gir (Bu Soru)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-secondary">
+            Bu soru doğru cevaplayanlara <span class="fw-bold" id="modalMaxPoints">0</span> puan yazar.
+          </div>
+
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Takım</th>
+                  <th class="text-end" style="width:180px;">Bu Sorudan</th>
+                </tr>
+              </thead>
+              <tbody id="pointsEntryBody"></tbody>
+            </table>
+          </div>
+
+          <div class="footer-note">
+            Tie-break modunda sadece eşitliği bozmaya aday takımlar listelenir.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary btn-xl" data-bs-dismiss="modal">İptal</button>
+          <button type="button" id="btnSavePoints" class="btn btn-primary btn-xl" data-bs-dismiss="modal">Kaydet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /***********************
+     *  CONFIG & QUESTION DB
+     ***********************/
+    const CATEGORY = {
+  YESIL: { key:'YESIL', label:'YEŞİL', points:10, dot:'#198754' },
+  SARI:  { key:'SARI',  label:'SARI',  points:15, dot:'#ffc107' },
+  KIRMIZI:{key:'KIRMIZI',label:'KIRMIZI',points:25, dot:'#dc3545' },
+  BONUS: { key:'BONUS', label:'BONUS', points:4, tiePoints:5, dot:'#0d6efd' }
+};
+
+    // Soru formatı:
+    // { id, categoryKey, question, options:{A,B,C,D}, answer:'A'|'B'|'C'|'D' }
+    // Buraya kendi gerçek sorularınızı aynı formatta ekleyebilirsiniz.
+    function generatePlaceholderQuestions(){
+      const makeQ = (catKey, n, startIdx=1) => {
+        const out = [];
+        for(let i=0;i<n;i++){
+          const idx = startIdx+i;
+          const id = `${catKey}-${idx}`;
+          out.push({
+            id,
+            categoryKey: catKey,
+            question: `[${CATEGORY[catKey].label}] Örnek Soru ${idx}: Acil tıp bilgisi ile ilgili doğru ifade hangisidir?`,
+            options: {
+              A: `Seçenek A (${CATEGORY[catKey].label} ${idx})`,
+              B: `Seçenek B (${CATEGORY[catKey].label} ${idx})`,
+              C: `Seçenek C (${CATEGORY[catKey].label} ${idx})`,
+              D: `Seçenek D (${CATEGORY[catKey].label} ${idx})`,
+            },
+            answer: ['A','B','C','D'][Math.floor(Math.random()*4)]
+          });
+        }
+        return out;
+      };
+      return [
+        ...makeQ('YESIL', 20, 1),
+        ...makeQ('SARI', 20, 1),
+        ...makeQ('KIRMIZI', 20, 1),
+        ...makeQ('BONUS', 10, 1),
+      ];
+    }
+/*SORULAR BURADA*/
+    
+    let QUESTION_BANK = [
+  // =========================
+  // ✅ YEŞİL (20 soru) — 10 puan
+  // =========================
+  {
+    id: "YESIL-001",//yazdık
+    categoryKey: "YESIL",
+    question: "2019 ESC Supraventriküler Taşikardi Kılavuzu'nda geniş QRS taşikardilerin akut yönetim algoritmasında aşağıdaki yaklaşımlardan hangisi yer almaz?",
+    options: { A: "Prokainamid", B: "Adenozin (düzenli monorfik taşikardilerde)", C: "Vagal manevra", D: "Diltiazem" },
+    answer: "D"
+  },
+  {
+    id: "YESIL-002",//yazdık
+    categoryKey: "YESIL",
+    question: "Hepatik ensefalopatiyi tetikleyen faktörler arasında aşağıdakilerden hangisi yer almaz?",
+    options: { A: "Gastrointestinal kanama", B: "Hiponatremi", C: "Metabolik alkaloz", D: "Hiperkalemi" },
+    answer: "D"
+  },
+  {
+    id: "YESIL-003", //yazdık
+    categoryKey: "YESIL",
+    question: "Aşağıdakilerden hangisi radius başı kırığı ile ilişkili değildir?",
+    options: { A: "Sail sign (yelken bulgusu)", B: "Posterior fat pad sign (arka yağ yastıkçığı) bulgusu", C: "Radiokapitellar hattın bozulması", D: "Anterior humeral hattın bozulması" },
+    answer: "D"
+  },
+  {
+    id: "YESIL-004",//yazıldı
+    categoryKey: "YESIL",
+    question: "Aşağıdaki zehirlenmelerden hangisinde metabolik asidoz beklenmez?",
+    options: { A: "Metanol", B: "Etilen glikol", C: "İzopropanol", D: "Siyanür" },
+    answer: "C"
+  },
+  {
+    id: "YESIL-005",//yazıldı
+    categoryKey: "YESIL",
+    question: "Karbonmonoksit zehirlenmesinde aşağıdakilerden hangisi, hiperbarik oksijen tedavisi endikasyonlarından biri değildir?",
+    options: { A: "Gebede karboksihemoglobin ≥ %15 olması", B: "Dirençli metabolik asidoz", C: "Senkop öyküsü", D: "Normobarik tedavi ile karboksihemoglobin seviyesinin gerilememesi" },
+    answer: "D"
+  },
+  {
+    id: "YESIL-006",//yazıldı
+    categoryKey: "YESIL",
+    question: "Anafilaktik şoktaintramüsküler adrenalin uygulanmasına rağmen persistan hipotansiyon gelişmesi halinde önerilen intravenöz adrenalin uygulaması başlangıç dozu aşağıdakilerden hangisidir?",
+    options: { A: "0,001-0,005 mcg/kg/dk", B: "0,01-0,1 mcg/kg/dk", C: "0,5-1 mcg/kg/dk", D: "5-10 mcg/kg/dk" },
+    answer: "B"
+  },
+  {
+    id: "YESIL-007",//yazıldı
+    categoryKey: "YESIL",
+    question: "35 yaş erkek hasta, trafik kazası sonrası acil servise getiriliyor. Entübasyon edilen hastada ani desatürasyon ve hipotansiyon gelişiyor. İlk düşünülmesi gereken tanı aşağıdakilerden hangisidir?",
+    options: { A: "Pulmoner emboli", B: "Aspirasyon", C: "Tansiyon pnömotoraks", D: "Özofagus entübasyonu" },
+    answer: "C"
+  },
+  {
+    id: "YESIL-008",//yazıldı
+    categoryKey: "YESIL",
+    question: "Genç kadın hasta suicid amaçlı ilaç alımı sonrası acil servise getiriliyor. Bilinç kapalı, solunum yavaş (6/dk), pupiller pinpoint olarak saptanıyor. Bu hastada ilk olarak yapılması gereken tedavi nedir?",
+    options: { A: "Flumazenil", B: "Nalokson", C: "Atropin", D: "Diazepam" },
+    answer: "B"
+  },
+  {
+    id: "YESIL-009",//yazıldı
+    categoryKey: "YESIL",
+    question: "24 yaş kadın hasta arı sokması sonrası 10 dakika içinde yaygın ürtiker, dudaklarda şişme, hışıltılı solunum ve baş dönmesi gelişmesi üzerine getiriliyor. Tansiyon 85/55 mmg, nabız 124/dk, solunum sayısı 28/dk. Bu hastada ilk verilmesi gereken tedavi aşağıdakilerden hangisidir?",
+    options: { A: "IV antihistaminik", B: "IV metilprednizolon", C: "IM epinefrin", D: "IV epinefrin" },
+    answer: "C"
+  },
+  {
+    id: "YESIL-010",//yazıldı
+    categoryKey: "YESIL",
+    question: "55 yaş erkek hasta, olası septik şok tablosuyla acil servise getiriliyor. Kılavuzlara göre, hastaya uygulanması gereken ilk sıvı resüsitasyonunun dozu ve hedef süresi aşağıdakilerden hangisidir?",
+    options: { A: "1 saat içinde 10 ml/kg", B: "6 saat içinde 20 ml/kg", C: "3 saat içinde 30 ml/kg", D: "24 saat içinde 40 ml/kg" },
+    answer: "C"
+  },
+  {
+    id: "YESIL-011",//yazıldı
+    categoryKey: "YESIL",
+    question: "Yeterli sıvı resüsitasyonuna rağmen inatçı hipotansiyonu olan septik şok hastasında, ortalama arteriyel basıncı hedeflenen düzeye çıkarmak için ilk tercih edilmesi gereken vazopressör ajan aşağıdakilerden hangisidir?",
+    options: { A: "Dopamin", B: "Epinefrin", C: "Vazopressin", D: "Norepinefrin" },
+    answer: "D"
+  },
+  {
+    id: "YESIL-012",//yazıldı
+    categoryKey: "YESIL",
+    question: "Septik şok düşünülen erişkin hastada ilk yaklaşım için aşağıdakilerden hangisi en uygundur?",
+    options: { A: "Tek başına laktat sonucunu beklemek", B: "Tedaviye hemen başlamak; damaryolu, uygun kültürler, erken antibiyotik ve kristalloid resüsitasyonu planlamak", C: "Önce q-SOFA skoru hesaplayıp sonucu beklemek", D: "Başlangıçta sadece santral venöz basınç ölçümü yapmak" },
+    answer: "B"
+  },
+  {
+    id: "YESIL-013",//yazıldı
+    categoryKey: "YESIL",
+    question: "VF saptanan arrest hastada ilk uygulanacak tedavi nedir?",
+    options: { A: "Amiodaron", B: "Defibrilasyon", C: "Adrenalin", D: "Entübasyon" },
+    answer: "B"
+  },
+  {
+    id: "YESIL-014",//yazıldı
+    categoryKey: "YESIL",
+    question: "Aşağıdaki akut karın ağrısı sendromlarından hangisi aciliyet sıralamasında en alttadır?",
+    options: { A: "Akut perfore apandisit", B: "İnferior Mİ", C: "Rüptüre abdominal aort anevrizması", D: "Dış gebelik rüptürü" },
+    answer: "A"
+  },
+  {
+    id: "YESIL-015",//yazıldı
+    categoryKey: "YESIL",
+    question: "Aşağıdaki klinik sınıflamalardan hangisi açık kırıklarla ilgilidir?",
+    options: { A: "Hunten-Hess Sınıflaması", B: "Baltazar Sınıflaması", C: "Gustillo Sınıflaması", D: "Salter-Harris Sınıflaması" },
+    answer: "C"
+  },
+  {
+    id: "YESIL-016",//yazıldı
+    categoryKey: "YESIL",
+    question: "Komalı bir hastada ciltte 'kiraz kırmızısı' diye tanımlanan bir renk değişikliği varsa, etiyolojide aşağıdakilerden hangisi öncelikle düşünülmelidir?",
+    options: { A: "Porfiri", B: "Meningokoksemi", C: "Alkol intoksikasyonu", D: "Karbonmonoksit intoksikasyonu" },
+    answer: "D"
+  },
+  {
+    id: "YESIL-017",//yazıldı
+    categoryKey: "YESIL",
+    question: "Aşağıdakilerden hangisi intraosseöz uygulama bölgelerinden biri değildir?",
+    options: { A: "Tibia", B: "Sternum", C: "Humerus", D: "Pelvis" },
+    answer: "D"
+  },
+  {
+    id: "YESIL-018",//yazıldı
+    categoryKey: "YESIL",
+    question: "Aşağıdakilerden hangisi temel bir havayolu becerisi değildir?",
+    options: { A: "Baş geri-çene yukarı manevrası", B: "Çene öne itme manevrası", C: "Balon-valv-maske uygulaması", D: "LMA yerleştirilmesi" },
+    answer: "D"
+  },
+  {
+    id: "YESIL-019",//yazıldı
+    categoryKey: "YESIL",
+    question: "Hipoglisemik olan hastaya 25 gr dekstroz vermek istersek, aşağıdaki seçeneklerden hangisi doğru olur?",
+    options: { A: "%10 dekstroz solüsyonundan 25cc veririm", B: "%20 dekstroz solüsyonundan 250cc veririm", C: "%10 dekstroz solüsyonundan 50cc veririm", D: "%20 dekstroz solüsyonundan 125cc veririm" },
+    answer: "D"
+  },
+  {
+    id: "YESIL-020",//yazıldı
+    categoryKey: "YESIL",
+    question: "65 yaşında bilinen KOAH öyküsü olan hasta, artan nefes darlığı ile başvuruyor. Kan gazında pH 7,22 pCO2 75 mmHg saptanıyor. Kontrendikasyon yoksa non-invaziv mekanik ventilasyon için en uygun başlangıç modu hangisidir?",
+    options: { A: "BİPAP", B: "CPAP", C: "Asist-Control Volüm (ACV) Ventilasyon", D: "Yüksek Akışlı Nazal Oksijen (HFNO)" },
+    answer: "A"
+  },
+      {
+    id: "YESIL-021",//yazıldı
+    categoryKey: "YESIL",
+    question: "Künt karın travması sonrası getirilen stabil hastada yapılan FAST incelemesi negatiftir. Ancak fizik muayenede kemer izi (seat-belt sign) mevcuttur. Bu hastada FAST'in en sık atladığı yaralanma bölgesi neresidir?",
+    options: { A: "Mesane rüptürü", B: "Karaciğer laserasyonu", C: "İçi boş organ yaralanması", D: "Splenik rüptür" },
+    answer: "C"
+  },
+  {
+    id: "YESIL-022",//yazıldı
+    categoryKey: "YESIL",
+    question: "Hayvan ısırıklarında 'Pasteurella' türlerine karşı en uygun profilaktik antibiyotik hangisidir?",
+    options: { A: "Sefaleksin", B: "Amoksisilin-Klavulanat", C: "Klindamisin", D: "Azitromisin" },
+    answer: "B"
+  },
+    {
+    id: "YESIL-023",//yazıldı
+    categoryKey: "YESIL",
+    question: "Akut bel ağrısı ile gelen ve 'kırmızı bayrak' bulgusu olmayan hastada ilk öneri nedir?",
+    options: { A: "Erken mobilizasyon ve NSAİİ", B: "Mutlak yatak istirahati", C: "Acil lomber MR", D: "Bel korsesi kullanımı" },
+    answer: "A"
+  },
+      {
+    id: "YESIL-024",//yazıldı
+    categoryKey: "YESIL",
+    question: "Status epileptikus yönetiminde, İV benzodiazepin sonrası nöbet devam ediyorsa aşağıdakilerden hangisi, 2.basamakta tercih edilen antiepileptik ilaçlardan biri değildir?",
+    options: { A: "Levatirasetam", B: "Fenitoin", C: "Valproik asit", D: "Ketiapin" },
+    answer: "D"
+  },
+    {
+    id: "YESIL-025",//yazıldı
+    categoryKey: "YESIL",
+    question: "Masif pulmoner embolide hemodinamik instabilite (şok) varlığında kontrendikasyon yoksa ilk tercih tedavi nedir?",
+    options: { A: "Sadece cerrahi embolektomi", B: "Sistemik trombolitik tedavi (tPA)", C: "Sadece DMAH", D: "İV kalsiyum kanal blokeri" },
+    answer: "B"
+  },
+    {
+    id: "YESIL-026",//yazıldı
+    categoryKey: "YESIL",
+    question: "Üst solunum yolu enfeksiyonu olan bir erişkinde aşağıdakilerden hangisi bakteriyel sinüziti, viral olandan ayıran en güçlü bulgudur?",
+    options: { A: "Sarı-yeşil burun akıntısı", B: "10 günden uzun süren veya kötüleşen semptomlar", C: "Sadece tek taraflı yüz ağrısı", D: "Hafif ateş ve halsizlik" },
+    answer: "B"
+  },
+
+  // =========================
+  // ✅ SARI (20 soru) — 15 puan
+  // =========================
+  {
+    id: "SARI-001", //yazdık
+    categoryKey: "SARI",
+    question: "Kardiyopulmoner resüsitasyon sırasında göğüs kompresyon oranının (chest compression fraction) kabul edilebilir minimum değeri dikkate alındığında, 50 dakikalık bir CPR sürecinde aşağıdakilerden hangisi kabul edilebilir en düşük göğüs kompresyon süresini ifade eder?",
+    options: { A: "25 dakika", B: "30 dakika", C: "35 dakika", D: "40 dakika" },
+    answer: "B"
+  },
+  {
+    id: "SARI-002", //yazdık
+    categoryKey: "SARI",
+    question: "Standart PA Akciğer grafisinde kardiyak ve mediastinal konturu oluşturan yapılar dikkate alındığında, aşağıdakilerden hangisi bu kontura katkıda bulunmaz?",
+    options: { A: "Sağ atrium", B: "Sağ ventrikül", C: "Arcus aorta", D: "Sol ventrikül" },
+    answer: "B"
+  },
+  {
+    id: "SARI-003", //yazdık
+    categoryKey: "SARI",
+    question: "Pelvik halka (pelvic ring) yaralanmalarında değerlendirilen radyografik hatlar dikkate alındığında, aşağıdakilerden hangisi pelvik halka bütünlüğü ile doğrudan ilişkili değildir?",
+    options: { A: "Acetabular tavan çizgisi", B: "Göz yaşı damlası", C: "İliosakral hat", D: "İliopektinal hat" },
+    answer: "A"
+  },
+  {
+    id: "SARI-004", //yazdık
+    categoryKey: "SARI",
+    question: "ATLS 11.baskı dikkate alındığında, aşağıdaki kavramlardan hangisi standart değerlendirme ve yönetim yaklaşımının bir parçası değildir?",
+    options: { A: "Hasar kontrol resüsitasyonu", B: "Aile içi şiddet", C: "Yüksek enerjili travma", D: "Şok indeksi" },
+    answer: "D"
+  },
+  {
+    id: "SARI-005", //yazdık
+    categoryKey: "SARI",
+    question: "Weingard ve arkadaşları tarafından geliştirilen ve 2019 yılında validasyonu yapılan, hastane öncesi ve acil servis ortamında entübasyon sırasında hem direkt hem de video laringoskopide kötü glottik görünüm ve ilk deneme başarısızlığını (first-pass fialure) öngörmede kullanılan en güçlü tek prediktör aşağıdakilerden hangisidir? ",
+    options: { A: "MACOCHA", B: "HEAVEN", C: "LEMON", D: "Cormack-Lehane" },
+    answer: "B"
+  },
+  {
+    id: "SARI-006", //yazdık
+    categoryKey: "SARI",
+    question: "Broca afazisi ile Wernicke afasizinin ayrımında aşağıdaki özelliklerden hangisi güvenilir bir ayırt edici değildir?",
+    options: { A: "Konuşma paterni", B: "Anlama", C: "Tekrarlama", D: "Kan gücü değerlendirmesi" },
+    answer: "C"
+  },
+  {
+    id: "SARI-007", //yazdık
+    categoryKey: "SARI",
+    question: "Aşağıdakilerden hangisi şokun tanımlanması, sınıflandırılması ve tedaviye yanıtın izlenmesinde kullanılabilen bir parametre değildir?",
+    options: { A: "Şok indeksi", B: "Baz açığı", C: "Parsiyel arteriyel O2 basıncı", D: "Perfüzyon indeksi" },
+    answer: "C"
+  },
+  {
+    id: "SARI-008",//yazıldı
+    categoryKey: "SARI",
+    question: "Acil servise başvuran bir hastanın arteriyel kan gazı ve biyokimya sonuçları şu şekildedir: pH 7,39 PaCO2 24 mmHg HCO3 14 mmol/L Na+ 142 mol/L K+ 4,0 mmol/L Cl- 108 mmol/L. Bu bulgular birlikte değerlendirildiğinde hastada mevcut olan asit-baz bozukluğu ve en olası etiyoloji aşağıdakilerden hangisidir? ",
+    options: { A: "Yüksek anyon açıklı metabolik asidoz - Metanol intoksikasyonu", B: "Normal anyon açıklı metabolik asidoz - Aşırı laksatif kullanımı", C: "Mikst bozukluk (Yüksek anyon açıklı metabolik asidoz + respiratuvar alkaloz) - Salisilat intoksikasyonu", D: "Yüksek anyon açıklı metabolik asidoz - Üremi" },
+    answer: "C"
+  },
+  {
+    id: "SARI-009",//yazıldı
+    categoryKey: "SARI",
+    question: "Alveolo-arteriyel gradiyent hesaplanırken kullanılan, hastaya ait 2 parametre aşağıdakilerden hangisidir?",
+    options: { A: "PaCO2-PaO2", B: "PaCO2-SaO2", C: "HCO3-PaCO2", D: "Anyon açığı-PaO2" },
+    answer: "A"
+  },
+  {
+    id: "SARI-010",//yazıldı
+    categoryKey: "SARI",
+    question: "Şiddetli metabolik asidozu olan hastada, aşağıdaki toksinlerden hangisi osmolar gap yüksekliği ile birlikte bilateral putamen nekrozu ve hemorajik alanlar görülmesi en olasıdır?",
+    options: { A: "Karbonmonoksit", B: "Metanol", C: "Etanol", D: "Hepatik ensefalopati" },
+    answer: "B"
+  },
+  {
+    id: "SARI-011",//yazıldı
+    categoryKey: "SARI",
+    question: "Aşağıdakilerden hangisi periferik sinir patolojisi değildir?",
+    options: { A: "Ramsey-Hunt Sendromu", B: "Bell paralizisi", C: "Anterior serebral arter infarktüsü", D: "Brakiyal pleksopati" },
+    answer: "C"
+  },
+  {
+    id: "SARI-012",//yazıldı
+    categoryKey: "SARI",
+    question: "Akut iskemik inmede IV alteplaz için kesin kontrendikasyon olmayan aşağıdakilerden hangisidir?",
+    options: { A: "18 yaş altı olmak", B: "48 saat içerisinde düşük molekül ağırlıklı heparin kullanılması", C: "Son iyi görülme halinin 4,5 saatten daha önce olması", D: "Hiperglisemi varlığı" },
+    answer: "D"
+  },
+  {
+    id: "SARI-013",//yazıldı
+    categoryKey: "SARI",
+    question: "Akut iskemik inmede trombolitik tedavi için aday bir hastada hedef kan basıncı ne olmalıdır?",
+    options: { A: "Sistolik <160 mmHg ve diastolik <100 mmHg", B: "Sistolik <230 mmHg ve diastolik <120 mmHg", C: "Sistolik ≤185 mmHg ve diastolik ≤110 mmHg", D: "Diastolik >140 mmHg" },
+    answer: "C"
+  },
+  {
+    id: "SARI-014",//yazıldı
+    categoryKey: "SARI",
+    question: "58 yaşında erkek hasta, son 2 gündür giderek artan göğüs ağrısı şikayeti ile acil servise başvuruyor. Ağrının başlangıçta eforla ortaya çıktığını ancak son 12 saattir istirahatte de devam ettiğini ve yaklaşık 30 dakika sürdüğünü ifade ediyor. Hastanın 3 hafta önce geçirilmiş miyokard enfarktüsü öyküsü mevcut. Fizik muayenede vital bulgular stabildir. Çekilden 12 derivasyonlu EKG'de belirgin ST elevasyonu saptanmıyor. İlk bakılan kardiyak troponin düzeyi normal sınırdadır Bu hastanın klinik tablosu için aşağıdakilerden hangisi doğrudur?",
+    options: { A: "Troponin normal olduğu için akut koroner sendrom dışlanır", B: "Bu tablo yalnızca miyokard enfarktüsü ile açıklanabilir", C: "Hastada akut miyokard hasarı olmadığı için kararsız anjina düşünülebilir", D: "EKG normal olduğu için klinik olarak anlamlı bir durum yoktur" },
+    answer: "C"
+  },
+  {
+    id: "SARI-015",//yazıldı
+    categoryKey: "SARI",
+    question: "40 yaşında erkek hasta, acil servise skrotuma da yayılan sol yan ağrısı ve bir kez olan titremeli ateş şikayetleri ile başvuruyor. Bu hasta için aşağıdakilerden hangisi doğrudur?",
+    options: { A: "Böbrek kolik ağrısı tarifleyen bu hastada, yüksek dereceli tıkanıklık şüphesi nedeniyle mutlaka görüntüleme yapılmalıdır", B: "Skrotal ağrı şikayeti ile başvuran tüm hastalarda testis torsiyonundan şüphelenilmelidir", C: "Bu hasta testis travması geçirdiyse %90 olasılıkla testis torsiyonu tanısı alacaktır", D: "Bu hastada enfeksiyon veya tıkanıklık ön planda düşünülüyorsa ve suprapubik kitle yani idrar retansiyonu bulgusu mevcutsa, görüntüleme yöntemleri ile inceleme gereklidir" },
+    answer: "D"
+  },
+  {
+    id: "SARI-016",//yazıldı
+    categoryKey: "SARI",
+    question: "Akut iskemik inmede intravenöz alteplaz (tPA) tedavisi ile ilgili aşağıdakilerden hangisi doğrudur?",
+    options: { A: "Semptom başlangıcından itibaren ilk 12 saat içinde uygulanabilir", B: "Doz 0,9 mg/kg olup maksimum doz 90 mg'dır", C: "BTedavi öncesi hedef kan basıncı <185/100 mmHg olmalıdır", D: "B ve C doğrudur" },
+    answer: "D"
+  },
+  {
+    id: "SARI-017",//yazıldı
+    categoryKey: "SARI",
+    question: "Akut pulmoner embolide, transtorasik ekokardiyografide aşağıdaki bulgulardan hangisi sağ ventrikül disfonksiyonu göstergesi olarak kabul edilir? ",
+    options: { A: "Sol ventrikül hipetrofisi", B: "Mc Connel bulgusu", C: "Mitral kapak prolapsusu", D: "Perikardiyal effüzyon" },
+    answer: "B"
+  },
+  {
+    id: "SARI-018",//yazıldı
+    categoryKey: "SARI",
+    question: "55 yaşında erkek hasta acil servise ani başlayan nefes darlığı ile başvuruyor. Öyküde 1 hafta önce diz protezi ameliyatı olduğu öğreniliyor. Tansiyon 100/65 mmHg, nabız 100/dk, solunum 26/dk, SpO2 %90. Fizik muayenede akciğer sesleri normal, ancak hasta belirgin dispneik. Bu hastada en uygun ilk tanısal yaklaşım aşağıdakilerden hangisidir?",
+    options: { A: "Akciğer grafisi çekilmesi", B: "D-dimer bakılması", C: "Toraks BT anjio çekilmesi", D: "Ekokardiyografi (EKO) çekilmesi" },
+    answer: "C"
+  },
+  {
+    id: "SARI-019",//yazıldı
+    categoryKey: "SARI",
+    question: "Serviste yatan ve durumu kötüleşen bir hastada, sepsis şüphesi bulunmaktadır. SSC 2026 Kılvauzu, hastanede yatan akut hastalarda tek başına bir sepsis tarama aracı olarak aşağıdakilerden hangisinin q-SOFA'ya tercih edilmesini önermektedir? ",
+    options: { A: "APACHE-II", B: "NEWS", C: "GKS", D: "SOFA" },
+    answer: "B" 
+  },
+  {
+    id: "SARI-020",//yazıldı
+    categoryKey: "SARI",
+    question: "70 yaşında hasta septik şok tanısıyla acil serviste takip edilmektedir ve vazopressör tedavisi başlanması planlanmaktadır. SSC 2026 Kılavuzu'nun bu yaş grubu için özel olarak önerdiği başlangıç Ortalama Arteriyel Basınç (OAB) hedef aralığı aşağıdakilerden hangisidir?",
+    options: { A: "60-65 mmHg", B: "65-70 mmHg", C: "70-75 mmHg", D: "80-85 mmHg" },
+    answer: "A"
+  },
+  {
+    id: "SARI-021",//yazıldı
+    categoryKey: "SARI",
+    question: "Sepsisin tanımı, tarihsel süreçte sürekli güncellenerek bugünkü halini almıştır. SSC 2026 Kılavuzu'nda da kabul edilen 'Sepsis-3' konsensusuna göre sepsis kavramının temel tıbbi tanımı aşağıdakileden hangisidir?",
+    options: { A: "Enfeksiyona karşı gelişen sistemin inflamatuvar yanıt sendromu (SIRS) varlığı", B: "Kan kültüründe patojen üremesiyle kanıtlanmış şiddetli reaksiyon", C: "Enfeksiyona bağlı olarak gelişen, hayatı tehdit edici akut organ disfonksiyonu", D: "Yeterli sıvı resüsitasyonuna yanıt vermeyen hipotansiyon" },
+    answer: "C"
+  },
+  {
+    id: "SARI-022",//yazıldı
+    categoryKey: "SARI",
+    question: "Aşağıdaki Geçici İskemik Atak (TİA) olgularından hangisi daha yüksek inme geçirme riskine sahiptir? ",
+    options: { A: "40 yaşında, 20 dakika süreli konuşma bozukluğu olan, TA: 120/70 mmHg ölçülen kadın hasta", B: "63 yaşında, 120 dakika süreli sağ kol ve bacakta hipoestesi olan, TA: 120/70 mmHg ölçülen diyabetik kadın hasta", C: "52 yaşında, 45 dakika süreli sağ tarafında güçsüzlük olan, TA: 10/80 mmHg ölçülen kadın hasta", D: "88 yaşında, 90 dakika süreli sol tarafında güçsüzlük olan, TA: 150/100 mmHg ölçülen erkek hasta" },
+    answer: "D"
+  },
+     {
+    id: "SARI-023",//yazıldı
+    categoryKey: "SARI",
+    question: "Aşağıdakilerden hangisi internal karotid arter (ICA) embolisini, orta serebral arter (MCA) embolisinden ayıran belirtidir? ",
+    options: { A: "Hemiparezi", B: "Hemihipoestezi", C: "Amarozis Fugax", D: "Bilinçte bozulma" },
+    answer: "C"
+  },
+    {
+    id: "SARI-024",//yazıldı
+    categoryKey: "SARI",
+    question: "Hangi lokalizasyondaki serebral kanamalar ventriküle en yüksek oranda açılır?",
+    options: { A: "Putamen", B: "Talamus", C: "Pons", D: "Frontal lob" },
+    answer: "A"
+  },
+      {
+    id: "SARI-025",//yazıldı
+    categoryKey: "SARI",
+    question: "Trafik kazası geçiren bir hastada, bir bacakta yüzeyel duyu kusuru varken diğer bacakta güçsüzlük varsa hangi spinal sendrom düşünülmelidir?",
+    options: { A: "Brown-Sequart Sendromu", B: "Anterior Kord Sendromu", C: "Santral Kord Sendromu", D: "Lateral ve Arka Kordon Sendromu" },
+    answer: "A"
+  },
+       {
+    id: "SARI-026",//yazıldı
+    categoryKey: "SARI",
+    question: "Post ponksiyon baş ağrısının gelişmesinde en önemli faktör hangisidir?",
+    options: { A: "Alınan omurilik sıvısı hacmi", B: "Lomber ponksiyon sonrası yatak istirahati süresi", C: "Lomber ponksiyondan sonra yetersiz hidrasyon", D: "Ponksiyon iğnesinin çapı" },
+    answer: "D"
+  },
+       {
+    id: "SARI-027",//yazıldı
+    categoryKey: "SARI",
+    question: "30 yaşında kadın, epidual anestezi ile yapılan doğum sonrası 2.günde şiddetli baş ağrısı, subfebril ateş ve ardından jeneralize tonik-klonik konvülziyon ile başvuruyor. TA: 170-100 mmHg, serum AST: 225 IU/L, serum ALT 140 IU/L, serum LDH 1017 IU/L; serum Üre ve Kreatinin normal; hemoglobin 10,6 mg/dL; trombosit sayısı 50x103 µ/mL olan hastanın tanısı aşağıdakilerden hangisidir?",
+    options: { A: "Meningoensefalit", B: "PRES", C: "Serebral venöz sinüs trombozu", D: "HELLP Sendromu" },
+    answer: "D"
+  },
+      {
+    id: "SARI-028",//yazıldı
+    categoryKey: "SARI",
+    question: "MR görüntüleme ile ilgili aşağıdakilerden hangisi doğrudur?",
+    options: { A: "Yağ T1'de hipointens, T2'de izointens görünür", B: "Ödem T1'de izointens, T2'de hiperintens görünür", C: "Geç subakut hematom T1 ve T2'de hiperintens görünür", D: "Paramanyetik madde T1'de hipointens, T2'de hiperintenst görünür" },
+    answer: "C"
+  },
+      {
+    id: "SARI-029",//yazıldı
+    categoryKey: "SARI",
+    question: "58 yaşında bir hasta, sol göz kapağında hafif düşüklük şikayeti ile başvuruyor. Fizik muayenede sol gözde miyozis ve hafif pitozis saptanıyor. Göz hareketleri normal olan bu hastada göz kapağındaki düşüklüğün en olası mekanizması aşağıdakilerden hangisidir?",
+    options: { A: "Levator palpebrae superioris kasının paralizisi", B: "Müller kası disfonksiyonu", C: "Orbicularis oculi kası hipertonisi", D: "N.oculomotorius (3.kraniyal sinir) hasarı" },
+    answer: "B"
+  },
+      {
+    id: "SARI-030",//yazıldı
+    categoryKey: "SARI",
+    question: "Geniş damar oklüzyonu (LVO) saptanan bir hastada semptomların başlangıcından itibaren 6-24 saatlik genişletilmiş zaman penceresinde mekaniz trombektomi kararı neye göre verilir?",
+    options: { A: "Sadece hastanın yaşına", B: "Kan basıncının < 190 mmHg olmasına", C: "BT / MR perfüzyon görüntülemede saptanan 'miss-match' (kurtarılabilir doku) varlığına", D: "Hastanın diyabetik olup olmamasına" },
+    answer: "C"
+  },
+       {
+    id: "SARI-031",//yazıldı
+    categoryKey: "SARI",
+    question: "Supraventriküler taşikardi (SVT) için aşağıdakilerden hangisi yanlıştır?",
+    options: { A: "QRS genişliği öncelikle değerlendirilir", B: "Dar QRS tanısı için QRS ölçümü 0,16 sn ve altıdır", C: "Hasta stabil ise vagal manevralar denenebilir", D: "İskemik göğüs ağrısı, mental durum bozukluğu, şok, hipotansiyon ve akut kalp yetmezliği durumunda senkronize kardiyoversiyon uygulanmalı" },
+    answer: "B"
+  },
+      {
+    id: "SARI-032",//yazıldı
+    categoryKey: "SARI",
+    question: "Kapnograf kullanım amaçlarından olmayan aşağıdakilerden hangisidir?",
+    options: { A: "Entübasyon tüpünün yerini doğrulamak", B: "Resüsitasyonun etkinliğini değerlendirmek", C: "Spontan dolaşımın başladığını öngörmek", D: "Defibrilasyon gerekliliğini belirlemek" },
+    answer: "D"
+  },
+       {
+    id: "SARI-033",//yazıldı
+    categoryKey: "SARI",
+    question: "70 yaşında erkek hasta, ani başlayan yırtılır tarzda sırt ağrısı ve sağ kolda güçsüzlük ile başvuruyor. Sağ kol TA: 170/90 mmHg, sol kol 130/70 mmHg ölçülüyor. Kontrastlı BT'de asendan aortu tutan diseksiyon izleniyor. Bu hastanın Stanford sınıflaması ve tedavisi için hangisi doğrudur?",
+    options: { A: "Stanford tip B - Acil cerrahi konsültasyonu", B: "Stanford tip A - Acil cerrahi konsültasyonu", C: "Stanford tip B - Sadece medikal takip", D: "Stanford tip A - Sadece medikal takip" },
+    answer: "B"
+  },
+      {
+    id: "SARI-034",//yazıldı
+    categoryKey: "SARI",
+    question: "Travma resüsitasyonu esnasında Masif Transfüzyon Protokolü uygulanan bir hastada gelişen Lethal Triad bileşenleri aşağıdakilerin hangisinde tam ve doğru olarak verilmiştir?",
+    options: { A: "Hipotansiyon, bradikardi, hipotermi", B: "Asidoz, koagülopati, hipotermi", C: "Hipokalsemi, hiperkalemi, asidoz", D: "Hipovolemi, anemi, trombositopeni" },
+    answer: "B"
+  },
+      {
+    id: "SARI-035",//yazıldı
+    categoryKey: "SARI",
+    question: "Tip-2 Diyabetik bir hastada 'Öglisemik Diyabetik Ketoasidoz' tablosuna neden olabilen yeni nesil ilaç grubu hangisidir?",
+    options: { A: "Metformin", B: "SGLT-2 inhibitörleri", C: "DPP-4 inhibitörleri", D: "Sülfonilüreler" },
+    answer: "B"
+  },
+      {
+    id: "SARI-036",//yazıldı
+    categoryKey: "SARI",
+    question: "Spontan pnömotoraks olan bir hastada, göğüs tüpü takıldıktan sonra akciğer ekspanse olmaz ve su altı drenaj sisteminde hava baloncuğu görüntüsü devam ediyorsa ilk şüphelenilmesi gereken durum nedir?",
+    options: { A: "Tüpün yerinden çıkması", B: "Eşlik eden masif hemotoraks", C: "Bronkoplevral fistül veya persistan hava kaçağı", D: "Re-ekspansiyon ödemi" },
+    answer: "C"
+  },
+     {
+    id: "SARI-037",//yazıldı
+    categoryKey: "SARI",
+    question: "Akut pankreatit tanısında hangisi Ranson Kriterleri içerisinde yer alan 'başvuru anı' parametrelerinden biridir?",
+    options: { A: "Hemotokrit düşüşü", B: "Serum kalsiyum düzeyi", C: "Lökosit sayısı", D: "Baz açığı" },
+    answer: "C"
+  },
+    {
+    id: "SARI-038",//yazıldı
+    categoryKey: "SARI",
+    question: "Bilinç bulanıklığı ile getirilen hastada EKG'de QTc 520 milisaniye ve Torsades de Pointes saptanıyor; altta yatan hipomagnezemisi mevcut. İlk tercih edilecek tedavi nedir?",
+    options: { A: "İV lidokain 1,5 mg/kg bolus", B: "İV amiodaron 300 mg", C: "İV magnezyum sülfat 2 gr yavaş bolus (1-2 dakikada)", D: "Senkronize kardiyoversiyon 200 joule" },
+    answer: "C"
+  },
+    
+  // =========================
+  // ✅ KIRMIZI (20 soru) — 25 puan
+  // =========================
+  {
+    id: "KIRMIZI-001", //yazdık
+    categoryKey: "KIRMIZI",
+    question: "Kapalı bir alanda meydana gelen yangına maruz kalan ve yaklaşık 30 dakika dumana maruz kaldıktan sonra kurtarılan 21 yaşındaki hastanın yönetimi ile ilgili aşağıdakilerden hangisi yanlıştır?",
+    options: { A: "Hastanın tercihen 8-8,5 numara tüple entübe edilmesi önerilir.", B: "Açıklanamayan metabolik asidoz varlığında yüze tam oturuan rezervuarlı maske ile %100 O2 verilmesi; hidroksikobalamin ve amin nitril uygulanması önerilir.", C: "Saatlik idrar çıkışının 30-50cc arasında tutulması önerilir.", D: "Bu hastanın ağrısını kontrol altında tutmak için düşük dozda morfin verilebilir." },
+    answer: "B"
+  },
+  {
+    id: "KIRMIZI-002", //yazdık
+    categoryKey: "KIRMIZI",
+    question: "Aşağıdakilerden hangisi beyin tomografisinde erken serebral iskemi bulgularından değildir?",
+    options: { A: "Beyin parankiminin karşı tarafa göre hipodens görünümü", B: "Lentiform nükleusun silinmesi", C: "İnsular ribbon sign (kenar işareti)", D: "Hemorajik infarkt" },
+    answer: "D"
+  },
+  {
+    id: "KIRMIZI-003", //yazdık
+    categoryKey: "KIRMIZI",
+    question: "Aşağıdaki manevralardan hangisi kalça çıkığı redüksiyonu ile ilişkili değildir?",
+    options: { A: "Whistler manevrası", B: "Kaptan Morgan manevrası", C: "Milch manevrası", D: "Allis manevrası" },
+    answer: "C"
+  },
+  {
+    id: "KIRMIZI-004", //yazdık
+    categoryKey: "KIRMIZI",
+    question: "Aşağıdakilerden hangisi ilaca bağlı atel (drug fever) için tipik özelliklerden biri değildir?",
+    options: { A: "Ateş genellikle ilacın başlanmasından 7-10 gün sonra ortaya çıkar", B: "İlaç kesildikten sonra ateş genellikle 72 saat içinde geriler", C: "Tüm ateş vakalarının yaklaşık %3-5'ini oluşturur", D: "Relatif bradikardi ve eozinofili, vakaların %15-30'sinde görülür" },
+    answer: "D"
+  },
+  {
+    id: "KIRMIZI-005",//yazdık
+    categoryKey: "KIRMIZI",
+    question: "Aşağıdaki ilaçlardan hangisinin kesilmesi (yoksunluğu) non-enfektif ateşe yol açma açısından diğerlerine göre daha az olasıdır?",
+    options: { A: "Gabapentin", B: "Levodopa", C: "Baklofen", D: "Atorvastatin" },
+    answer: "D"
+  },
+  {
+    id: "KIRMIZI-006",//yazdık
+    categoryKey: "KIRMIZI",
+    question: "Difficult Airway Society (DAS) 2025 Kılavuzu'na göre anatomik zor havayolu yönetiminde altın standart olarak kabul edilen yöntem aşağıdan hangisidir?",
+    options: { A: "Uyanık entübasyon", B: "Retrograd entübasyon", C: "Bougie-first stratejisi", D: "Scalpel-bougie tekniği" },
+    answer: "A"
+  },
+  {
+    id: "KIRMIZI-007",//yazdık
+    categoryKey: "KIRMIZI",
+    question: "Aşağıdakilerden hangisi AHA 2025 ve ERC 2025 Kılavuzları arasındaki post-kardiyak arrest bakımına ilişkin yaklaşım farklılıklarını doğru yansıtır?",
+    options: { A: "AHA hedef sıcaklık aralığını 32-37,5C olarak önerirken ERC ≤37,5C ile ateşten kaçınmayı önerir", B: "AHA ve ERC her ikisi de MAP≥65 mmHg hedefini önerir", C: "AHA refrakter VF'de DSD/VC kullanımını önerirken ERC önermez.", D: "ERC post-arrest bakım algoritmalarında opioid yönetimine yer verirken AHA'da bu yaklaşım yer almaz." },
+    answer: "A"
+  },
+  {
+    id: "KIRMIZI-008",//yazdık
+    categoryKey: "KIRMIZI",
+    question: "Amfetamin veya difenhidramin zehirlenmesi şüphesi ile getirilen bir hastada, bulguların hangi maddeye bağlı olduğunu ayırt etmek için aşağıdakilerden hangisine bakılması en değerlidir?",
+    options: { A: "Vücut ısısı", B: "Nabız sayısı", C: "Pupil muayenesi", D: "Solunum sayısı" },
+    answer: "D"
+  },
+  {
+    id: "KIRMIZI-009", //yazdık
+    categoryKey: "KIRMIZI",
+    question: "Aşağıdaki kılavuz-öneri eşleştirmelerinden hangisi, ilgili alanda literatürde ilk kez 'yüksek düzey kanıta (level-A) rağmen rutin kullanımın önerilmemesi (strong recommendation against)' şeklinde ifade edilen yaklaşımı doğru yansıtmaktadır?",
+    options: { A: "American Headache Society (AHS) 2025: Akut migren tedavisinde hidromorfin (opioid) kullanımı", B: "Surviving Sepsis Campaign 2026: Sepsis tedavisinde hidroksietil-nişasta (HES) kullanımı", C: "Difficult Airway Society (DAS) 2025: Zor havayolu yönetiminde rutin krikoid bası uygulanması", D: "European Society of Cardiology (ESC) 2024: Düşük riskli pulmoner embolide trombolitik tedavi uygulanması" },
+    answer: "A"
+  },
+  {
+    id: "KIRMIZI-010", //yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Acil servise ani başlangıçlı göğüs ağrısı ile başvuran 58 yaşında erkek hatada, ağrı tarifinin yırtılır tarzda olduğu öğreniliyor. Fizik muayenede sağ ve sol kol arasında 25 mmHg sistolik kan basıncı farkı saptanıyor. Özgeçmişinde HT öevcut. Bu hastanın aort diseksiyonu risk skoru (ADD-RS) kaçtır?",
+    options: { A: "0", B: "1", C: "2", D: "3" },
+    answer: "C"
+  },
+  {
+    id: "KIRMIZI-011",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Bilinç kaybı ile başvuran bir hastanın beyin MR incelemesinde bilateral globul pallidus düzeyinde diffüzyon kısıtlanması saptanıyor. Klinik izlemde hasta kısmen düzelmekle birlikte, birkaç hafta sonra gelişen davranış değişiklikleri, bilişsel gerileme ve yürüme bozuklğu nedeniyle yeniden değerlendiriliyor. Kontrol MR'da periventriküler beyaz cevher tutulumu izleniyor. Bu klinik ve radyolojik bulguların birlikte en iyi açıkladığı tanı aşağıdakilerden hangisidir?",
+    options: { A: "Metanol intoksikasyonu", B: "Siyanür zehirlenmesi", C: "Karbonmonoksit zehirlenmesi", D: "Wilson hastalığı" },
+    answer: "C"
+  },
+  {
+    id: "KIRMIZI-012",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Aşağıdakilerden hangisi Pnömoni Ciddiyet İndeksi (PSI) parametrelerinden biri değildir?",
+    options: { A: "Sodyum", B: "Hemoglobin", C: "Kan üre azotu", D: "Arteriyel PaO2" },
+    answer: "B"
+  },
+  {
+    id: "KIRMIZI-013",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Botulizm ile ilgili aşağıdakilerden hangisi yanlıştır?",
+    options: { A: "En yaygın botulizm toksini kozmetik açıdan enjeksiyon şeklinde kullanılan formudur", B: "Uygun şekilde korunmamış konserve gıdalar kaynaktır", C: "Desendan simetrik paralizi yapar", D: "Pupiller genellikle miyotik olur" },
+    answer: "D"
+  },
+  {
+    id: "KIRMIZI-014",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Sepsisle mücadele kılavuzu 2026 güncellemesine göre, septik şokta yeterli sıvı resüsitasyonu ve vazopressör infüzyonuna rağmen hala hipoperfüzyon bulguları devam ediyorsa, vazopressöre ek olarak aşağıdaki inotroplardan hangisi ilk tercih olarak eklenir?",
+    options: { A: "Dopamin", B: "Dobutamin", C: "Fenilefrin", D: "Levosimendan" },
+    answer: "B"
+  },
+  {
+    id: "KIRMIZI-015",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "ATLS 11'e göre travmatik hemorajik şokta erken resüsitasyon sırasında aşağıdaki parametrelerden hangisi doku hipoperfüzyonunun şiddetini ve masif transfüzyon gereksinimini öngörmede en güçlü ve en erken göstergelerden biridir?",
+    options: { A: "Hemoglobin düzeyi", B: "Baz açığı", C: "Sistolik kan basıncı", D: "İdrar çıkışı" },
+    answer: "B"
+  },
+  {
+    id: "KIRMIZI-016",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "65 yaş hasta bilinç bulanıklığı ile acil servise getiriliyor. Kan gazında pH 7,21 pCO2 25 mmHg HCO3 10 mEq/L olarak saptanıyor. Bu hastada en olası metabolik durum aşağıdakilerden hangisidir?",
+    options: { A: "Saf metabolik asidoz", B: "Metabolik asidoz + respiratvar alkaloz", C: "Saf respiratuvar asidoz", D: "Metabolik alkaloz" },
+    answer: "B"
+  },
+  {
+    id: "KIRMIZI-017",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Septik şok nedeniyle tedavi gören 40 yaşındaki hastanın ateşi 39,5C olarak ölçülüyor. Ağrısı ya da nörolojik bir acil durumu olmayan bu hastada, salt klinik gidişatı iyileştirmek ve sepsise müdahale etmek adına ateş düşürücü kullanımıyla ilgili güncel öneri nedir?  ",
+    options: { A: "Doku oksijen tüketimini azaltmak için rutin olarak antipiretik kullanılmalıdır", B: "Klinik sonuçları iyileştirmek amacıyla ateş düşürücü ilaç veya yüzey soğutma kullanılması önerilmez", C: "Sadece parasetamol kontrendike ise NSAİİ ajanlar başlanmalıdır", D: "Sadece ateş 40C'yi geçtiğinde santral venöz soğutma kataterleri kullanılmalıdır" },
+    answer: "B"
+  },
+  {
+    id: "KIRMIZI-018",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Acil serviste septik şok tanısı alan ve acil vazopressör ihtiyacı olan bir hastanın henüz santral venöz katateri açılamamıştır. Kılavuzların bu durumdaki vazopressör yaklaşımı için güncel önerisi nedir?",
+    options: { A: "Doku nekrozunu önlemek için santral yol açılana kadar hipotansiyona izin verilmeli ve sıvıya devam edilmelidir", B: "Santral erişim sağlanmasını beklemek yerine ortala arteriyel basıncı iyileştirmek için periferik yoldan vazopressör başlanmalıdır", C: "Periferik yoldan sadece epinefrin verilebilir, norepinefrin kullanımı kesin kontrendikedir", D: "Mutlaka intraosseöz (Kİİ) erişim sağlanmalı ve 24 saat boyunca bu yoldan deam edilmelidir" },
+    answer: "B"
+  },
+  {
+    id: "KIRMIZI-019",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Septik şokta başlangıç resüsitasyonundan sonra sıvı tedavisinin sürdürülmesinde, SSC 2026 Kılavuzu hangi yaklaşımı desteklemektedir? ",
+    options: { A: "Yalnızca santral venöz basınca göre karar verilmesi", B: "Her hastaya sabit ek 30 ml/kg sıvı verilmesi", C: "Dinamik ölçümlerle yönlendirilen bireyselleştirilmiş sıvı tedavisi", D: "Laktat normale dönene kadar sınırsız kristalloid verilmesi" },
+    answer: "C"
+  },
+  {
+    id: "KIRMIZI-020",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Acil servise ateş yüksekliği, baş ağrısı ve ense sertliği ile başvuran bir hastada CRP yüksekliği ve PNL ağırlıklı lökositoz mevcuttur. Güncel kılavuzlara göre aşağıdakilerden hangisi uygun değildir?",
+    options: { A: "Deksametazon IV", B: "Seftriakson IV", C: "Beyin BT ve takiben LP", D: "Sıvı replasmanı" },
+    answer: "C"
+  },
+      {
+    id: "KIRMIZI-021",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Nalokson antidot olarak hangi durumda kullanılmaz?",
+    options: { A: "Klonidin toksisitesi", B: "Kaptopril toksisitesi", C: "Klaritromisin toksisitesi", D: "Valproik asit toksisitesi" },
+    answer: "C"
+  },
+      {
+    id: "KIRMIZI-022",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Aşağıdakilerden hangisi intravenöz trombolitik tedavi için kesin bir kontrendikasyondur?",
+    options: { A: "80 yaş üstü olmak", B: "Menstrüasyon", C: "Son 3 ay içinde geçirilmiş ciddi kafa travması veya intrakraniyal cerrahi", D: "Hafif şiddetli (NIHSS-4) inme semptomları" },
+    answer: "C"
+  },
+{
+    id: "KIRMIZI-023",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Akut apandisitin fizik muayene bulgularından hangisinin tanımı yanlış verilmiştir?",
+    options: { A: "Dunphy belirtisi; topuk testi yapılırken sağ iliak fossada ağrı duyulması", B: "Rovsing belirtisi; sol iliak fossa palpasyonunda sağ iliak fossada ağrı hissedilmesi", C: "Obturator belirtisi; sağ kalça fleksiyondayken internal ve eksternal rotasyonda sağ iliak fosada ağrı hissedilmesi", D: "Psoas belirtisi; sağ kalça ekstsansiyona getirilirken sağ iliak fossada ağrı hissedilmesi" },
+    answer: "A"
+  },
+      {
+    id: "KIRMIZI-024",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "Kafa travması sonrası acil servise getirilen hastanın pupil muayenesinde sağda midriyazis ve dışa aşağıya bakış saptanıyor. Bu klinik tablo hangi herniasyon tipinin en spesifik bulgusudur?",
+    options: { A: "Tonsiller herniasyon", B: "Subfalsiyan herniasyon", C: "Uncal herniasyon", D: "Santral herniasyon" },
+    answer: "C"
+  },
+      {
+    id: "KIRMIZI-025",//yazıldı
+    categoryKey: "KIRMIZI",
+    question: "40 yaşında kadın hasta, ani gelişen senkop sonrası acil servise getiriliyor. 12 derivasyon EKG'de Tip 1 Brugada paterni izleniyor. Hastanın öyküsünde ailede ani ölüm mevcuttur. Bu hastada kesin tedavi yönetimi için en uygun adım nedir??",
+    options: { A: "Beta bloker tedavisi başlamak", B: "ICD", C: "Kalsiyum kanal blokeri kullanımı", D: "Oral amiodaron yüklemesi" },
+    answer: "B"
+  },
+
+  // =========================
+  // 🧩 BONUS (10 soru) — ŞABLON (sen dolduracaksın)
+  // =========================
+  {
+    id: "BONUS-001", //yazıldı
+    categoryKey: "BONUS",
+    question: "Kanıt düzeyi piramidi dikkate alındığında, aşağıdaki çalışma türletinden hangisi gözlemsel bir araştırma olup diğerlerine göre daha düşük bir kanıt düzeyine sahiptir?",
+    options: { A: "Kohort çalışmaları", B: "Meta-analiz", C: "Sistematik derlemeler", D: "Klinik rehberler" },
+    answer: "A"
+  },
+  {
+    id: "BONUS-002",//yazıldı
+    categoryKey: "BONUS",
+    question: "Aşağıdaki çalışmalardan hangisi çok merkezli, çok ülkeli/çok kıtalı, randomize, plasebo kontrollü ve kör bir çalışma değildir?",
+    options: { A: "CRUSH II", B: "HALT-IT", C: "CRUSH III", D: "REACT II" },
+    answer: "D"
+  },
+  {
+    id: "BONUS-003",//yazıldı
+    categoryKey: "BONUS",
+    question: "Modern CPR (göğüs kompresyonu + ventilasyon) ilk kez hangi yıl tanımlanmıştır?",
+    options: { A: "1920", B: "1945", C: "1960", D: "1985" },
+    answer: "C"
+  },
+  {
+    id: "BONUS-004",//yazıldı
+    categoryKey: "BONUS",
+    question: "İlk başarılı insan defibrilasyonu hangi ortamda yapılmıştır?",
+    options: { A: "Acil servis", B: "Ambulans", C: "Ameliyathane", D: "Yoğun bakım" },
+    answer: "C"
+  },
+  {
+    id: "BONUS-005",//yazıldı
+    categoryKey: "BONUS",
+    question: "Acil Tıp, Türkiye'de ayrı bir tıpta uzmanlık dalı olarak hangi yıl kabul edilmiştir?",
+    options: { A: "1983", B: "1993", C: "1998", D: "2005" },
+    answer: "B"
+  },
+  {
+    id: "BONUS-006",//yazıldı
+    categoryKey: "BONUS",
+    question: "Aşağıdaki triyaj sistemlerinden hangisi 5 seviyeli olup, acil serviste hasta önceliklendirmesi için yaygın olarak kullanılmaktadır?)",
+    options: { A: "START (Simple Triage and Rapid Treatment)", B: "MTS (Manchester Triage System)", C: "SATS (South African Triage Scale)", D: "JTAS (Japan Triage and Acuity Scale)" },
+    answer: "B"
+  },
+  {
+    id: "BONUS-007",//yazıldı
+    categoryKey: "BONUS",
+    question: "Ondokuzuncu yüzyılda özellikle tropikal bölgelerde görev yapan İngiliz askerleri, sıtma hastalığından korunmak amacıyla kinin içeren acı bir sıvı tüketmekteydi. Zamanla bu sıvının tadını iyileştirmek için içine şeker ve gaz eklenmiş, böylece günümüzde yaygın olarak tüketilen bir içecek ortaya çıkmıştır. Bu tarihsel süreçte kullanılan ve günümüzde de tüketilen bu sıvı, şaşağıdakilerden hangisidir?",
+    options: { A: "Soda", B: "Enerji içeceği", C: "Tonik su (tonic water)", D: "Maden suyu" },
+    answer: "A"
+  },
+  {
+    id: "BONUS-008",//yazıldı
+    categoryKey: "BONUS",
+    question: "Liverpool maçında sakatlanan futbolcu Noa Lang'a saha kenarında ağrı kontrolü amacılyla, halk arasında 'yeşil düdük (green whistle)' olarak bilinen ve inhale edilerek kullanılan bir ajan verilmiştir. Bu ajan damar yolu gerektirmeden, hızlı analjezi sağlar ve özellikle travma hastalarında acil durumlarda tercih edilir. Bu ajan aşağıdakilerden hangisidir?",
+    options: { A: "Morfin", B: "Lidokain", C: "Metoksifluran", D: "Fentanil" },
+    answer: "C"
+  },
+  {
+    id: "BONUS-009",//yazıldı
+    categoryKey: "BONUS",
+    question: "Napolyon Savaşları sırasında savaş alanında yaralılara daha hızlı müdahale edebilmek amacıyla, 'uçan ambulans (ambulance volante)' konsepini ve ilk modern triyaj uygulamalarını geliştiren, acil tıbbın tarihsel öncülerinden kabul edilen Fransız cerrah kimdir?",
+    options: { A: "Calude Beck", B: "Peter Safar", C: "Rene Triage", D: "Dominique Jean Larrey" },
+    answer: "D"
+  },
+  {
+    id: "BONUS-010",//yazıldı
+    categoryKey: "BONUS",
+    question: "Acil tıbbın bağımsız bir uzmanlık dalı olarak gelişiminde en önemli kilometre taşlarından biri sayılan ve Dr.Bruce Janiak'ın ilk asistan olarak kabul edildiği dünyadaki ilk Acil Tıp ihtisas (residency) programı 1970 yılında hangi merkezde başlamıştır?",
+    options: { A: "Kanuni Sultan Süleyman Eğitim ve Araştırma Hastanesi", B: "University of Cinninati", C: "John Hopkins University", D: "Massachutts General Hospital" },
+    answer: "B"
+  },
+  {
+    id: "BONUS-011",//yazıldı
+    categoryKey: "BONUS",
+    question: "Modern kardiyopulmoner resüsitasyonun gelişiminde temel isimlerden biri olarak kabul edilen kişi kimdir?",
+    options: { A: "William Harvey", B: "Peter Safar", C: "Joseph Lister", D: "Andreas Vesalius" },
+    answer: "B"
+  },
+  {
+    id: "BONUS-012",//yazıldı
+    categoryKey: "BONUS",
+    question: "Aşağıdakilerden hangisi Acil Tıp Uzmanlığının ülkemizde (ve dünyada) müstakil bir uzmanlık olmasının önde gelen nedenlerinden biri değildir?",
+    options: { A: "Kentleşme ve sağlık hizmetlerine ulaşım", B: "Sağlık finansmanı ve sosyal güvenlik açıkları", C: "Refah ve zenginleşme, halkın talepleri", D: "Alanda çalışan doktorların çabaları" },
+    answer: "D"
+  },
+  {
+    id: "BONUS-013",//yazıldı
+    categoryKey: "BONUS",
+    question: "Aşağıdaki parenteral ağrı tedavilerinin hangisinin orta ve şiddetli migren baş ağrıs atağında kullanılması önerilmemektedir?",
+    options: { A: "Proklorperazin İV", B: "Parasetamol IV", C: "Metoklopramid İV", D: "Ketorolak İV" },
+    answer: "B"
+  },
+  {
+    id: "BONUS-014",//yazıldı
+    categoryKey: "BONUS",
+    question: "Batı dünyasında Avicenna olarak tanınan İbn-i Sina'nın yazdığı, 17.yüzyılın ortalarına kadar hem Avrupa hem de İslam Dünyası'ndaki tıp fakültelerinde temel ders kitabı olarak okutulan, 17 dile çevrilmiş 5 ciltten oluşan dev eserin adı nedir?",
+    options: { A: "Kitabü'ş-Şifa (İyileşme Kitabı)", B: "El-Kanun Fi't-Tıbb (Tıbbın Kanunu)", C: "Kitabü'l-Münviri (Aydınlanma Kitabı)", D: "Hıfzıssıhha (Sağlığın Koruması)" },
+    answer: "B"
+  },
+  {
+    id: "BONUS-015",//yazıldı
+    categoryKey: "BONUS",
+    question: "İbn-i Sina, klinik gözlemleri ile modern tıbbın birçok kavramını yüzyıllar öncesinden tanımlamıştır. Aşağıdakilerden hangisi İbn-i Sina'nın bizzat gözlemleyip eserlerinde detaylandırdığı tıbbi durumlardan biri değildir??",
+    options: { A: "Karantina uygulamasının bulaşıcı hastalık yayılımını engellemesi", B: "Diyabet hastalarının idrarındaki tatlılık", C: "Nabız muayenesi ile hastalık teşhisi", D: "Kan dolaşımının (küçük dolaşım) akciğerlerde gerçekleştiği" },
+    answer: "D"
+  }
+      
+];
+
+    /***********************
+     *  APP STATE
+     ***********************/
+    const state = {
+  teams: [],
+  activeTeamNames: [],
+  stageIndex: 0,
+  stageName: '',
+  stagePlan: null,
+  stageTotalQuestions: 0,
+  stageAskedCount: 0,
+  tieBreak: false,
+  tieCandidates: [],
+  tieBreakSlots: 0,
+  tieBreakLocked: false,
+  currentQuestion: null,
+  timer: { seconds:30, remaining:30, interval:null },
+  usedQuestionIds: new Set(),
+  cutoff: null,
+  tieBreakQuestionsAsked: 0,
+  tieSafeNames: [],
+  pendingComp: null,
+  tieBreakBaseScores: {},
+  tieBreakExtra: {},
+  stageTieExtra: {},
+  lastScoreAction: null,
+};
+
+    const STAGES = [
+      null,
+      { name: '1.AŞAMA', cutoff: 4, plan: ['YESIL','SARI','SARI','KIRMIZI','BONUS'] },
+      { name: '2.AŞAMA', cutoff: 3, plan: ['YESIL','SARI','SARI','KIRMIZI','BONUS'] },
+      { name: 'FİNAL',  cutoff: 1, plan: ['YESIL','SARI','SARI','KIRMIZI','BONUS'] },
+    ];
+
+// ✅ Sesler
+const SND = {
+  countdown: new Audio('https://acil42.com/wp-content/uploads/2026/02/30secCountdownSound.mp3'),
+  gong:      new Audio('https://acil42.com/wp-content/uploads/2026/02/BellGongSoundEffect.mp3'),
+  standby:   new Audio('https://acil42.com/wp-content/uploads/2026/02/StandBySound.mp3'),
+};
+
+SND.countdown.preload = 'auto';
+SND.gong.preload = 'auto';
+SND.standby.preload = 'auto';
+SND.standby.loop = true;
+
+function playOneShot(a){
+  try{
+    a.pause();
+    a.currentTime = 0;
+    a.play();
+  }catch(e){}
+}
+
+function startStandby(){
+  try{
+    SND.standby.currentTime = 0;
+    SND.standby.play();
+  }catch(e){}
+}
+
+function stopStandby(){
+  try{
+    SND.standby.pause();
+    SND.standby.currentTime = 0;
+  }catch(e){}
+}
+
+
+    
+
+    /***********************
+     *  HELPERS
+     ***********************/
+    const $ = (id) => document.getElementById(id);
+
+    function showScreen(screenId){
+      for(const el of document.querySelectorAll('.screen')) el.classList.remove('active');
+      $(screenId).classList.add('active');
+    }
+
+    function getTeamsByNames(names){
+      return state.teams.filter(t => names.includes(t.name));
+    }
+
+    function sortTeamsByScore(names){
+  return getTeamsByNames(names)
+    .slice()
+    .sort((a,b)=>{
+      const dScore = b.score - a.score;
+      if(dScore !== 0) return dScore;
+
+      // ✅ Tie-break ekstra varsa ikinci kriter
+      const ax = state.stageTieExtra?.[a.name] || 0;
+      const bx = state.stageTieExtra?.[b.name] || 0;
+      const dExtra = bx - ax;
+      if(dExtra !== 0) return dExtra;
+
+      return a.name.localeCompare(b.name,'tr');
+    });
+}
+
+    function formatStagePills(){
+      $('stagePill').classList.remove('d-none');
+      $('subStagePill').classList.remove('d-none');
+      $('stagePill').textContent = state.stageName;
+      $('subStagePill').textContent = state.tieBreak ? 'Tie-break (Bonus)' : 'Normal';
+    }
+
+    function updateLiveScoreboard(){
+  const sorted = sortTeamsByScore(state.activeTeamNames);
+  $('activeTeamsBadge').textContent = `${sorted.length} takım`;
+  const tbody = $('liveScoreBody');
+  tbody.innerHTML = '';
+
+  const cutoff = state.cutoff || 0;
+
+  sorted.forEach((t, idx)=>{
+    const tr = document.createElement('tr');
+
+    // Mevcut sıralama renkleri (istersen kaldırabilirsin)
+    if(idx===0) tr.classList.add('rank-1');
+    if(idx===1) tr.classList.add('rank-2');
+    if(idx===2) tr.classList.add('rank-3');
+    if(idx===3) tr.classList.add('rank-4');
+
+    // ✅ Üst tur / elenen vurgusu
+    if(cutoff > 0){
+      if(idx < cutoff){
+        tr.classList.add('live-qualify');     // üst tura çıkıyor
+      }else{
+        tr.classList.add('live-eliminate');   // eleniyor
+      }
+    }
+
+    const extra = state.stageTieExtra?.[t.name] || 0;
+
+tr.innerHTML = `
+  <td class="fw-bold">${idx+1}</td>
+  <td class="fw-bold">${escapeHtml(t.name)}</td>
+  <td class="text-end fw-bold fs-5">
+    ${t.score}
+    ${extra > 0 ? `<span class="badge text-bg-warning ms-2">+${extra}</span>` : ``}
+  </td>
+`;
+    tbody.appendChild(tr);
+  });
+}
+
+function setArenaTheme(catKey){
+  const arena = document.getElementById('arenaCard');
+  if(!arena) return;
+
+  arena.classList.remove('bg-yesil','bg-sari','bg-kirmizi','bg-bonus','bg-tiebreak');
+
+  // ✅ Tie-break her şeyin üstünde baskın olsun
+  if(state.tieBreak){
+    arena.classList.add('bg-tiebreak');
+    return;
+  }
+
+  if(catKey === 'YESIL') arena.classList.add('bg-yesil');
+  if(catKey === 'SARI') arena.classList.add('bg-sari');
+  if(catKey === 'KIRMIZI') arena.classList.add('bg-kirmizi');
+  if(catKey === 'BONUS') arena.classList.add('bg-bonus');
+}
+
+    
+    function escapeHtml(s){
+      return (s||'').replace(/[&<>"']/g, m => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+      }[m]));
+    }
+
+    function pickRandomQuestion(categoryKey){
+      const candidates = QUESTION_BANK.filter(q => q.categoryKey===categoryKey && !state.usedQuestionIds.has(q.id));
+      if(candidates.length === 0) return null;
+      const q = candidates[Math.floor(Math.random()*candidates.length)];
+      state.usedQuestionIds.add(q.id);
+      return q;
+    }
+
+    function startTimer(){
+      stopTimer();
+      state.timer.remaining = state.timer.seconds;
+      $('timerBig').textContent = state.timer.remaining;
+      $('timerBar').style.width = '100%';
+
+      state.timer.interval = setInterval(()=>{
+  state.timer.remaining -= 1;
+
+  const pct = Math.max(0, (state.timer.remaining / state.timer.seconds) * 100);
+  $('timerBig').textContent = state.timer.remaining;
+  $('timerBar').style.width = pct + '%';
+
+  // 🔴 Son 10 saniye koyu kırmızı
+  if(state.timer.remaining <= 10){
+    $('timerBig').classList.add('timer-danger');
+    $('timerBig').classList.remove('timer-normal');
+  }else{
+    $('timerBig').classList.add('timer-normal');
+    $('timerBig').classList.remove('timer-danger');
+  }
+
+  if(state.timer.remaining <= 0){
+    stopTimer();
+    onTimeUp();
+  }
+}, 1000);
+    }
+
+    function stopTimer(){
+      if(state.timer.interval){
+        clearInterval(state.timer.interval);
+        state.timer.interval = null;
+      }
+    }
+
+    function onTimeUp(){
+      $('btnShowAnswer').classList.remove('d-none');
+      disableOptions(true);
+    }
+
+    function disableOptions(disabled){
+      ['optA','optB','optC','optD'].forEach(id => $(id).disabled = disabled);
+    }
+
+    function resetQuestionButtons(){
+  $('btnShowAnswer').classList.add('d-none');
+  $('btnEnterPoints').classList.add('d-none');
+  $('btnNextQuestion').classList.add('d-none');
+  $('btnUndoLastScore').classList.add('d-none');
+}
+
+    function renderQuestion(q, questionIndexText){
+      state.currentQuestion = q;
+
+const cat = CATEGORY[q.categoryKey];
+
+const chip = $('chipCategory');
+chip.textContent = cat.label;
+
+// önce eski renkleri temizle
+chip.classList.remove(
+  'text-bg-success',
+  'text-bg-warning',
+  'text-bg-danger',
+  'text-bg-primary'
+);
+
+// kategoriye göre renk ver
+if(cat.key === 'YESIL') chip.classList.add('text-bg-success');
+if(cat.key === 'SARI') chip.classList.add('text-bg-warning');
+if(cat.key === 'KIRMIZI') chip.classList.add('text-bg-danger');
+if(cat.key === 'BONUS') chip.classList.add('text-bg-primary');
+      setArenaTheme(cat.key);
+      let displayPoints = cat.points;
+
+if(state.tieBreak && cat.key === 'BONUS'){
+  displayPoints = cat.tiePoints;
+}
+
+$('txtPoints').textContent = displayPoints;
+      $('txtQCounter').textContent = questionIndexText;
+
+      $('chipMode').classList.toggle('d-none', !state.tieBreak);
+
+      $('questionText').textContent = q.question;
+      $('optA').innerHTML = `<span class="opt-letter">A</span><span>${escapeHtml(q.options.A)}</span>`;
+$('optB').innerHTML = `<span class="opt-letter">B</span><span>${escapeHtml(q.options.B)}</span>`;
+$('optC').innerHTML = `<span class="opt-letter">C</span><span>${escapeHtml(q.options.C)}</span>`;
+$('optD').innerHTML = `<span class="opt-letter">D</span><span>${escapeHtml(q.options.D)}</span>`;
+
+      // reset option styles
+      for(const id of ['optA','optB','optC','optD']){
+        const btn = $(id);
+        btn.style.background = '#fff';
+        btn.style.borderColor = 'rgba(0,0,0,.08)';
+      }
+
+      disableOptions(true);
+resetQuestionButtons();
+
+// ✅ Timer otomatik başlamasın
+stopTimer();
+$('timerBig').textContent = state.timer.seconds;
+$('timerBar').style.width = '100%';
+      // ✅ Timer rengi her soruda sıfırlansın (siyah)
+$('timerBig').classList.add('timer-normal');
+$('timerBig').classList.remove('timer-danger');
+
+// ✅ Butonlar
+$('btnStartTimer').classList.remove('d-none');     // süreyi başlat görünsün
+$('btnShowAnswer').classList.add('d-none');
+$('btnEnterPoints').classList.add('d-none');
+$('btnNextQuestion').classList.add('d-none');
+
+updateLiveScoreboard();
+formatStagePills();
+    }
+
+    function highlightAnswer(){
+      const ans = state.currentQuestion.answer;
+      const map = {A:'optA',B:'optB',C:'optC',D:'optD'};
+      const correctId = map[ans];
+
+      for(const id of ['optA','optB','optC','optD']){
+        $(id).style.background = '#fff';
+      }
+      const correctBtn = $(correctId);
+      correctBtn.style.background = 'rgba(25,135,84,.15)';
+      correctBtn.style.borderColor = 'rgba(25,135,84,.6)';
+
+      $('btnEnterPoints').classList.remove('d-none');
+      $('btnShowAnswer').classList.add('d-none');
+    }
+
+    function buildPointsModal(){
+  const maxPts = CATEGORY[state.currentQuestion.categoryKey].points;
+  $('modalMaxPoints').textContent = maxPts;
+
+  const targetNames = state.tieBreak ? state.tieCandidates : state.activeTeamNames;
+  const tbody = $('pointsEntryBody');
+  tbody.innerHTML = '';
+
+  targetNames.forEach((name, idx)=>{
+    const group = `ans-${state.stageIndex}-${state.tieBreak ? 'T' : 'N'}-${idx}`; // ✅ benzersiz
+
+    const tr = document.createElement('tr');
+    tr.dataset.team = name; // ✅ RAW isim, escape yok
+    tr.innerHTML = `
+      <td class="fw-bold">${escapeHtml(name)}</td>
+      <td class="text-end">
+        <div class="btn-group" role="group" aria-label="Doğru Yanlış">
+          <input type="radio" class="btn-check" name="${group}" id="${group}-w" autocomplete="off" data-correct="0" checked>
+          <label class="btn btn-outline-danger fw-bold" for="${group}-w">Yanlış</label>
+
+          <input type="radio" class="btn-check" name="${group}" id="${group}-c" autocomplete="off" data-correct="1">
+          <label class="btn btn-outline-success fw-bold" for="${group}-c">Doğru</label>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+    function savePointsFromModal(){
+  let pts = CATEGORY[state.currentQuestion.categoryKey].points;
+
+  // Tie-break bonus soruları 5 puan olsun
+  if(state.tieBreak && state.currentQuestion.categoryKey === 'BONUS'){
+    pts = CATEGORY.BONUS.tiePoints;
+  }
+
+  if(state.tieBreak){
+    state.tieBreakQuestionsAsked += 1;
+  }
+
+  // Bu işlem için geri alma kaydı oluştur
+  const action = {
+    questionId: state.currentQuestion.id,
+    tieBreak: state.tieBreak,
+    tieBreakLocked: state.tieBreakLocked,
+    tieCandidates: [...state.tieCandidates],
+    tieBreakSlots: state.tieBreakSlots,
+    tieSafeNames: [...state.tieSafeNames],
+    tieBreakQuestionsAsked: state.tieBreakQuestionsAsked,
+    teamScoreSnapshot: {},
+    stageTieExtraSnapshot: { ...state.stageTieExtra },
+    tieBreakExtraSnapshot: { ...state.tieBreakExtra }
+  };
+
+  state.teams.forEach(t=>{
+    action.teamScoreSnapshot[t.name] = t.score;
+  });
+
+  // ✅ satır satır oku
+  const rows = $('pointsEntryBody').querySelectorAll('tr[data-team]');
+  rows.forEach(tr=>{
+    const name = tr.dataset.team;
+    const checked = tr.querySelector('input[type="radio"]:checked');
+    const isCorrect = checked && checked.getAttribute('data-correct') === "1";
+
+    if(isCorrect){
+      if(state.tieBreak){
+        state.tieBreakExtra[name] = (state.tieBreakExtra[name] || 0) + pts;
+        state.stageTieExtra[name] = (state.stageTieExtra[name] || 0) + pts;
+      }else{
+        const team = state.teams.find(t=>t.name===name);
+        if(team) team.score += pts;
+      }
+    }
+  });
+
+  // son işlemi hafızaya al
+  state.lastScoreAction = action;
+
+  updateLiveScoreboard();
+
+  $('btnNextQuestion').classList.remove('d-none');
+  $('btnUndoLastScore').classList.remove('d-none');
+  $('btnEnterPoints').classList.add('d-none');
+}
+
+    function undoLastScoreAction(){
+  if(!state.lastScoreAction) return;
+
+  const ok = confirm(
+    "Bu soruya ait son puan girişi geri alınacak.\n\n" +
+    "Takımların puanları bir önceki duruma dönecek ve puan giriş ekranı yeniden açılacak.\n\n" +
+    "Emin misiniz?"
+  );
+
+  if(!ok) return;
+
+  const action = state.lastScoreAction;
+
+  // takım skorlarını eski haline döndür
+  state.teams.forEach(t=>{
+    if(action.teamScoreSnapshot.hasOwnProperty(t.name)){
+      t.score = action.teamScoreSnapshot[t.name];
+    }
+  });
+
+  // tie-break ile ilgili snapshot'ları geri yükle
+  state.stageTieExtra = { ...action.stageTieExtraSnapshot };
+  state.tieBreakExtra = { ...action.tieBreakExtraSnapshot };
+  state.tieBreak = action.tieBreak;
+  state.tieBreakLocked = action.tieBreakLocked;
+  state.tieCandidates = [...action.tieCandidates];
+  state.tieBreakSlots = action.tieBreakSlots;
+  state.tieSafeNames = [...action.tieSafeNames];
+  state.tieBreakQuestionsAsked = action.tieBreakQuestionsAsked;
+
+  updateLiveScoreboard();
+
+  // buton durumları
+  $('btnNextQuestion').classList.add('d-none');
+  $('btnUndoLastScore').classList.add('d-none');
+  $('btnEnterPoints').classList.remove('d-none');
+
+  // aynı sorunun puan giriş modalını tekrar aç
+  buildPointsModal();
+  const modal = new bootstrap.Modal(document.getElementById('pointsModal'));
+  modal.show();
+
+  // geri alınan işlem tekrar geri alınmasın
+  state.lastScoreAction = null;
+}
+
+    function startStage(stageIdx, participantNames){
+      state.stageIndex = stageIdx;
+      state.stageName = STAGES[stageIdx].name;
+      state.cutoff = STAGES[stageIdx].cutoff;
+      state.stagePlan = STAGES[stageIdx].plan.slice();
+      state.stageTotalQuestions = state.stagePlan.length;
+      state.stageAskedCount = 0;
+      state.tieBreak = false;
+      state.tieCandidates = [];
+      state.tieBreakSlots = 0;
+state.tieBreakLocked = false;
+state.tieBreakBaseScores = {};
+state.tieBreakExtra = {};
+      state.activeTeamNames = participantNames.slice();
+      state.stageTieExtra = {};   // ✅ yeni aşamaya temiz başla
+            // ✅ Önceki aşamadan tie-break kompanzasyonu varsa, yeni aşama başında uygula
+      if(state.pendingComp && state.pendingComp.amount > 0){
+        const { amount, names } = state.pendingComp;
+
+        participantNames.forEach(n=>{
+          if(names.includes(n)){
+            const team = state.teams.find(t=>t.name===n);
+            if(team) team.score += amount;
+          }
+        });
+
+        state.pendingComp = null; // ✅ bir kere uygula
+      }
+
+      showScreen('screenQuestion');
+      nextQuestion();
+    }
+
+    function nextQuestion(){
+      resetQuestionButtons();
+
+      let catKey;
+      let qCounterText;
+
+      if(state.tieBreak){
+        catKey = 'BONUS';
+        qCounterText = `Tie-break`;
+      }else{
+        catKey = state.stagePlan[state.stageAskedCount];
+        qCounterText = `${state.stageAskedCount + 1}/${state.stageTotalQuestions}`;
+      }
+
+      const q = pickRandomQuestion(catKey);
+      if(!q){
+        alert('Bu kategoride kullanılabilir soru kalmadı. (Soru bankasını genişletin)');
+        return;
+      }
+
+      renderQuestion(q, qCounterText);
+
+      if(!state.tieBreak){
+        state.stageAskedCount += 1;
+      }
+
+      function resetQuestionButtons(){
+  $('btnShowAnswer').classList.add('d-none');
+  $('btnEnterPoints').classList.add('d-none');
+  $('btnNextQuestion').classList.add('d-none');
+  $('btnStartTimer')?.classList.remove('d-none'); // ✅
+}
+    }
+
+    function computeCutoffTie(names, cutoff){
+  const sorted = sortTeamsByScore(names);
+  if(sorted.length <= cutoff) return { hasTie:false, tiedNames:[] };
+
+  const at = sorted[cutoff-1];
+  const next = sorted[cutoff];
+
+  const atExtra = state.stageTieExtra?.[at.name] || 0;
+  const nextExtra = state.stageTieExtra?.[next.name] || 0;
+
+  // ✅ Cutoff sınırında (score+extra) aynıysa tie-break gerekir
+  const boundaryTie = (at.score === next.score) && (atExtra === nextExtra);
+  if(!boundaryTie) return { hasTie:false, tiedNames:[] };
+
+  // Aynı (score+extra) anahtarına sahip tüm takımları aday yap
+  const keyScore = at.score;
+  const keyExtra = atExtra;
+
+  const tiedNames = sorted
+    .filter(t => t.score === keyScore && ((state.stageTieExtra?.[t.name] || 0) === keyExtra))
+    .map(t => t.name);
+
+  return { hasTie:true, tiedNames };
+}
+
+    function computeTieBreakResolution(candidateNames, slots){
+  const arr = candidateNames
+    .map(name => ({
+      name,
+      base: state.tieBreakBaseScores[name] || 0,
+      extra: state.tieBreakExtra[name] || 0
+    }))
+    .sort((a,b)=>{
+      const dBase = b.base - a.base;
+      if(dBase !== 0) return dBase;
+
+      const dExtra = b.extra - a.extra;
+      if(dExtra !== 0) return dExtra;
+
+      return a.name.localeCompare(b.name, 'tr');
+    });
+
+  if(arr.length <= slots){
+    return {
+      resolved: true,
+      winners: arr.map(x => x.name),
+      losers: []
+    };
+  }
+
+  const boundaryWinner = arr[slots - 1];
+  const boundaryLoser = arr[slots];
+
+  const unresolved =
+    boundaryWinner.base === boundaryLoser.base &&
+    boundaryWinner.extra === boundaryLoser.extra;
+
+  return {
+    resolved: !unresolved,
+    winners: arr.slice(0, slots).map(x => x.name),
+    losers: arr.slice(slots).map(x => x.name),
+    ranking: arr
+  };
+}
+
+    function showScoreboardForStage(){
+  startStandby();
+  showScreen('screenScoreboard');
+
+  const sorted = sortTeamsByScore(state.activeTeamNames);
+  const cutoff = state.cutoff;
+
+  const showExtraCol =
+    (state.stageIndex !== 3) &&
+    Object.values(state.stageTieExtra || {}).some(v => (Number(v) || 0) > 0);
+
+  $('thTieExtra').classList.toggle('d-none', !showExtraCol);
+
+  $('scoreboardTitle').textContent = `${state.stageName} Puan Tablosu`;
+  if(state.stageIndex === 1){
+    $('scoreboardSubtitle').textContent = `İlk ${cutoff} takım 2.AŞAMAYA çıkar. Cutoff eşitliği varsa bonus tie-break yapılır.`;
+  }else if(state.stageIndex === 2){
+    $('scoreboardSubtitle').textContent = `İlk ${cutoff} takım FİNALE çıkar. Cutoff eşitliği varsa bonus tie-break yapılır.`;
+  }else{
+    $('scoreboardSubtitle').textContent = `Final sonuçları. Eşitlik varsa bonus tie-break ile şampiyon belirlenir.`;
+  }
+
+  const tbody = $('finalScoreBody');
+  tbody.innerHTML = '';
+
+  sorted.forEach((t, idx)=>{
+    const isQualified = idx < cutoff;
+    let status = isQualified ? 'Üst Tura' : 'Elendi';
+    if(state.stageIndex === 3) status = (idx===0 ? 'ŞAMPİYON' : '—');
+
+    const tr = document.createElement('tr');
+    if(idx===0) tr.classList.add('rank-1');
+    if(idx===1) tr.classList.add('rank-2');
+    if(idx===2) tr.classList.add('rank-3');
+    if(idx===3) tr.classList.add('rank-4');
+
+    const extra = state.stageTieExtra?.[t.name];
+    const extraCell = showExtraCol
+      ? `<td class="text-end fw-bold">${typeof extra === 'number' && extra > 0 ? extra : '—'}</td>`
+      : '';
+
+    tr.innerHTML = `
+      <td class="fw-bold">${idx+1}</td>
+      <td class="fw-bold">${escapeHtml(t.name)}</td>
+      <td class="text-end fw-bold fs-5">${t.score}</td>
+      ${extraCell}
+      <td class="text-end">
+        <span class="badge ${status==='Üst Tura' ? 'text-bg-success' :
+                            status==='Elendi' ? 'text-bg-secondary' :
+                            status==='ŞAMPİYON' ? 'text-bg-success' : 'text-bg-light'}">
+          ${status}
+        </span>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // tie check
+  const tie = computeCutoffTie(state.activeTeamNames, cutoff);
+  const tieInfo = $('tieInfo');
+
+  if(tie.hasTie){
+    if(!state.tieBreakLocked){
+      const sortedNow = sortTeamsByScore(state.activeTeamNames);
+
+      const safeAbove = sortedNow
+        .slice(0, cutoff)
+        .filter(t => !tie.tiedNames.includes(t.name))
+        .length;
+
+      const slots = cutoff - safeAbove;
+
+      state.tieBreak = true;
+      state.tieBreakLocked = true;
+      state.tieCandidates = tie.tiedNames.slice();
+      state.tieBreakSlots = slots;
+
+      state.tieBreakQuestionsAsked = 0;
+      state.tieSafeNames = sortedNow
+        .slice(0, cutoff)
+        .filter(t => !tie.tiedNames.includes(t.name))
+        .map(t => t.name);
+
+      state.tieBreakBaseScores = {};
+      state.tieBreakExtra = {};
+
+      state.tieCandidates.forEach(n=>{
+        const team = state.teams.find(t=>t.name===n);
+        state.tieBreakBaseScores[n] = team ? team.score : 0;
+        state.tieBreakExtra[n] = state.stageTieExtra[n] || 0;
+      });
+    }
+
+    tieInfo.classList.remove('d-none');
+    stopStandby();
+    showScreen('screenQuestion');
+    nextQuestion();
+    return;
+  }
+
+  $('btnProceedNextStage').classList.toggle('d-none', state.stageIndex === 3);
+  tieInfo.classList.add('d-none');
+}// ✅ showScoreboardForStage BURADA BİTER
+
+
+// ✅ BUNLAR DIŞARIDA OLMALI (GLOBAL SCOPE)
+function proceedFromScoreboard(){
+  stopStandby();
+  const sorted = sortTeamsByScore(state.activeTeamNames);
+
+  if(state.stageIndex === 1){
+    const nextNames = sorted.slice(0, STAGES[1].cutoff).map(t=>t.name);
+    startStage(2, nextNames);
+  }else if(state.stageIndex === 2){
+    const nextNames = sorted.slice(0, STAGES[2].cutoff).map(t=>t.name);
+    startStage(3, nextNames);
+  }else{
+    alert(`Şampiyon: ${sorted[0]?.name || '-'}`);
+  }
+}
+
+function resetAll(){
+  stopTimer();
+  state.teams = [];
+  state.activeTeamNames = [];
+  state.stageIndex = 0;
+  state.stageName = '';
+  state.stagePlan = null;
+  state.stageTotalQuestions = 0;
+  state.stageAskedCount = 0;
+  state.tieBreak = false;
+state.tieCandidates = [];
+state.tieBreakSlots = 0;
+state.tieBreakLocked = false;
+state.currentQuestion = null;
+state.usedQuestionIds = new Set();
+state.tieBreakBaseScores = {};
+state.tieBreakExtra = {};
+state.stageTieExtra = {};
+state.lastScoreAction = null;
+
+  $('stagePill').classList.add('d-none');
+  $('subStagePill').classList.add('d-none');
+  $('teamTextarea').value = '';
+  $('btnBeginStage1').disabled = true;
+
+  // ⚠️ burası istersen: QUESTION_BANK'i placeholder'a çevirmek yerine aynı kalsın
+  // QUESTION_BANK = generatePlaceholderQuestions();
+
+  showScreen('screenWelcome');
+}
+    /***********************
+     *  EVENTS
+     ***********************/
+    $('btnStart').addEventListener('click', ()=> showScreen('screenTeams'));
+
+    $('btnStartTimer').addEventListener('click', ()=>{
+  $('btnStartTimer').classList.add('d-none');
+
+  stopStandby();                 // ✅ standby kapansın
+  playOneShot(SND.countdown);    // (playOneShot zaten resetliyor)
+  playOneShot(SND.gong);
+
+  startTimer();
+});
+
+    $('btnDemoFill').addEventListener('click', ()=>{
+      $('teamTextarea').value = [
+        '4 Silahşörler',
+        'Nahita',
+        'Şevko Acil',
+        'Noktua',
+        'Primum non nocere',
+        'BezmiTeam',
+        'PAÜ Resüsiteam',
+        'Konya City',
+        'Nabız yok biz varız',
+        "9'uncu Senfoni"
+      ].join('\n');
+      showScreen('screenTeams');
+    });
+
+    $('btnClearTeams').addEventListener('click', ()=>{
+      $('teamTextarea').value = '';
+      $('btnBeginStage1').disabled = true;
+    });
+
+    $('btnParseTeams').addEventListener('click', ()=>{
+  // ✅ Hem gerçek satır sonlarını hem de "\n" yazısını destekle
+  const raw = $('teamTextarea').value.replace(/\\n/g, '\n');
+
+  const lines = raw
+    .split(/\r?\n/)          // ✅ gerçek newline (Mac/Win)
+    .map(s=>s.trim())
+    .filter(Boolean);
+
+  const uniq = [];
+  for(const n of lines){
+    if(!uniq.includes(n)) uniq.push(n);
+  }
+
+  state.teams = uniq.map(name => ({ name, score:0 }));
+  $('btnBeginStage1').disabled = state.teams.length < 2;
+  alert(`Takımlar kaydedildi: ${state.teams.length} takım`);
+});
+
+    $('btnBeginStage1').addEventListener('click', ()=>{
+      state.teams.forEach(t=> t.score = 0);
+      state.usedQuestionIds = new Set();
+      state.tieBreak = false;
+      state.tieCandidates = [];
+
+      const participantNames = state.teams.map(t=>t.name);
+      startStage(1, participantNames);
+    });
+
+    $('btnShowAnswer').addEventListener('click', ()=>{
+  playOneShot(SND.gong);
+  highlightAnswer();
+});
+
+    $('btnEnterPoints').addEventListener('click', ()=>{
+  buildPointsModal();
+  startStandby();
+});
+
+    const pointsModalEl = document.getElementById('pointsModal');
+pointsModalEl.addEventListener('hidden.bs.modal', ()=>{
+  stopStandby();
+});
+
+    $('btnSavePoints').addEventListener('click', ()=>{
+      savePointsFromModal();
+
+      
+
+if(state.tieBreak && state.tieBreakLocked){
+  const result = computeTieBreakResolution(state.tieCandidates, state.tieBreakSlots);
+
+  if(result.resolved){
+    // toplam skorları eski haliyle bırakıyoruz
+    state.tieCandidates.forEach(n=>{
+      const team = state.teams.find(t=>t.name===n);
+      if(team) team.score = state.tieBreakBaseScores[n] ?? team.score;
+    });
+
+    // tie-break bitti
+    state.tieBreak = false;
+    state.tieBreakLocked = false;
+    state.tieCandidates = [];
+    state.tieBreakSlots = 0;
+    state.tieSafeNames = [];
+    state.tieBreakQuestionsAsked = 0;
+    state.pendingComp = null;
+    state.tieBreakBaseScores = {};
+    state.tieBreakExtra = {};
+  }
+}
+    });
+
+    $('btnNextQuestion').addEventListener('click', ()=>{
+      // Normal tur soruları bitti ise tabloya geç
+      if(!state.tieBreak && state.stageAskedCount >= state.stageTotalQuestions){
+        showScoreboardForStage();
+        return;
+      }
+      // Tie-break bittiyse ve normal tur zaten bittiyse tablo
+      if(!state.tieBreak && state.stageAskedCount >= state.stageTotalQuestions){
+        showScoreboardForStage();
+        return;
+      }
+      nextQuestion();
+    });
+
+    $('btnProceedNextStage').addEventListener('click', proceedFromScoreboard);
+    $('btnUndoLastScore').addEventListener('click', undoLastScoreAction);
+
+    $('btnBackToTeams').addEventListener('click', ()=>{
+  stopStandby();
+
+  const ok = confirm(
+    "TÜM YARIŞMA SIFIRLANACAK!\n\n" +
+    "Tüm puanlar ve ilerleme silinecek.\n" +
+    "Bu işlem geri alınamaz.\n\n" +
+    "Emin misiniz?"
+  );
+
+  if(!ok) return;
+
+  resetAll();
+  showScreen('screenTeams');
+});
+    
+
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden) stopTimer();
+    });
+
+    // İlk açılışta
+    updateLiveScoreboard();
+  </script>
+</body>
+</html>
